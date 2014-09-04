@@ -2,50 +2,48 @@ Subscribe Email is a UMD JavaScript module for rendering a mailing list sign up 
 
 It allows developers to quickly include an email collection form on a page without being concerned with the implementation details of a specific mailing list platform. We're currently aiming to support mailing lists on SendGrid, MailChimp and Universe.
 
-# Including the Module in Your Project
-You can include the module any way that fits with your workflow;
+# Getting Started
 
-**If you use bower (recommended):**
-`bower install subscribe-email --save`
+## 1) Get the Module
+If you're doing things manually, you can download the ZIP and extract the contents of the `/dist` directory into your project's assets folder.
 
-**If you use npm:**
-`npm install subscribe-email --save`
+If you're using a package manager like [npm](https://www.npmjs.org/) or [Bower](http://bower.io/), you can install the module to your devDependencies.
 
-**If you're not using a package manager:**
-Just copy and paste the `/dist` directory to wherever you want it in your project.
+## 2) Include the Module in Your Page
+If you're doing things manually, just drop `<script src="subscribe-email.min.js">` into your page, and make sure you update the `src` attribute to point to wherever you saved the module.
 
+Alternatively, you can bundle the module along with the rest of your projects assets using a tool like [Browserify](http://browserify.org/), [Grunt](http://gruntjs.com/), [Gulp](http://gulpjs.com/), etc.
 
-# Wiring Things Up
-Once you've got the module included in your project, getting started using it is simple.
+## 3) Use the Module
+After you've gotten the module and included it in your page, you can start using it.
 
-1. Include subscribe-email.js in your page. You can use your preferred script loader, concatenate it with the rest of your scripts during your build process, or just drop `<script src="subscribe-email.min.js">` into your page. Just make sure you update the path to point to wherever you've saved or included it.
-2. Create an empty placeholder element for the subscription form on the page; `<div id="subscribe-form"></div>`.
+1) Create an empty placeholder element where you want to include the form on the page. You can use any block-level HTML element, given that it has a unique way to select it;
 
-## Quick Start
+`<div id="subscribe-form"></div>`
 
-Create a new `SubscribeEmail` instance somewhere in the page's JavaScript. The only parameter that's required is the `element`. You can either use the ID of the placeholder HTML element you created or pass in a jQuery object;
+2) Create a new `SubscribeEmail` instance somewhere in the page's JavaScript. The only parameter that's required is `element`, which is a DOM element, jQuery element, or selector string to refer to the placeholder element.
 ```
   new SubscribeEmail({
-    element: subscribe-form
+    element: '#subscribe-form'
   });
 ```
 
-## Advanced Options
+3) Profit?
 
-There are also some advanced configuration options available.
-```
-  new SubscribeEmail({
-    element: subscribe-form, //required
-    template: 'minimal-BEM', //defaults to 'minimal-BEM'
-    async: true //defaults to false
-  });
-```
+# Advanced Usage
+
+## Options
+The module can be configured with several optional parameters passed to it's constructor. Here is the full list of options:
+
+- `element`: **(Required)** A DOM element, jQuery element, or selector string to refer to the placeholder element.
+- `template`: A string of the name of the compiled handlebars template to use to render the form. Available templates are `'BEM-with-messaging'` or `'BEM-minimal'` (default). See "Customizing the Templates" below for more information.
+- `async`: Whether the form with be submitted asynchronously (defaults to false).
 
 ## Customizing the Template
-The Subscribe Email module comes with some compiled Handlebars templates that you can choose from. If you want to create custom HTML template(s), you can add a Handlebars template to `/src/templates` and run `gulp build` from the project directory to build the module from source and compile the template.
+The Subscribe Email module comes with some compiled Handlebars templates that you can choose from. If you want to create custom HTML template(s), you can add a Handlebars template to `/src/templates` and run `gulp build` from the module's root directory to build the module from source and compile the template (note: this may require running `npm install` first to install subscribe-email's devDependencies).
 
 ## Events
 Some mailing list platforms may send response messages for things like confirmation or validation errors. The default template will display these messages along-side the form, but alternatively you can easily integrate the messages into other parts of your page by listening for the following events to fire;
 
-`subscriptionError`: This event will fire if the mailing list provider returns an error and fails to add the email address to the list. Specific details about the error will be included in a payload object when available.
-`subscriptionSuccess`: This event will fire if the mailing list provider returns a confirmation that the email address has been added to the list. Specific details will be included in a payload object when available.
+- `subscriptionError`: This event will fire if the mailing list provider returns an error and fails to add the email address to the list. Specific details about the error will be included in a payload object when available.
+- `subscriptionSuccess`: This event will fire if the mailing list provider returns a confirmation that the email address has been added to the list. Specific details will be included in a payload object when available.
