@@ -22,11 +22,18 @@
     //Render Template
     placeholder.innerHTML = template(options);
 
+    var messageHolder = document.querySelector('#subscribe-email-message');
+
     //Over-ride Default Submit Action with CORS request
-    placeholder.querySelector('form').addEventListener("submit", function(e) {
+    placeholder.querySelector('form').addEventListener('submit', function(e) {
       e.preventDefault();
-      var requestData = serialize(this) + "&amp;key=" + options.key;
+      var requestData = serialize(this) + '&amp;key=' + options.key;
+      console.log(requestData);
       makeCorsRequest(serviceConfig.formAction, requestData);
+    });
+
+    document.addEventListener('subscribe-email-message', function (e) {
+      messageHolder.innerHTML = e.detail;
     });
 
   };
@@ -56,17 +63,23 @@
       return;
     }
     xhr.onload = function() {
-      console.log(xhr.responseText);
+      var response = JSON.parse(xhr.responseText);
+
+      response.messages.forEach(function(message){
+        var msgEvent = new CustomEvent('subscribe-email-message', { 'detail': message });
+        document.dispatchEvent(msgEvent);
+      });
+
     };
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.send(data);
   }
 
   function createCorsRequest(method, url) {
     var xhr = new XMLHttpRequest();
-    if ("withCredentials" in xhr) {
+    if ('withCredentials' in xhr) {
       xhr.open(method, url, true);
-    } else if (typeof XDomainRequest != "undefined") {
+    } else if (typeof XDomainRequest != 'undefined') {
       xhr = new XDomainRequest();
       xhr.open(method, url);
     } else {
