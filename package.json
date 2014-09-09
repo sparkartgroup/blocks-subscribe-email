@@ -2,7 +2,7 @@
   "name": "subscribe-email",
   "version": "0.0.0",
   "private": true,
-  "main": "subscribe-email.js",
+  "main": "src/subscribe-email.js",
   "browserify": {
     "transform": [
       "hbsfy"
@@ -10,6 +10,8 @@
   },
   "devDependencies": {
     "browserify": "^5.11.1",
+    "ecstatic": "^0.5.4",
+    "form-serialize": "^0.3.0",
     "gulp": "^3.8.7",
     "gulp-notify": "^1.5.1",
     "gulp-util": "^3.0.1",

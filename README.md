@@ -21,11 +21,12 @@ After you've gotten the module and included it in your page, you can start using
 
 `<div id="subscribe-form"></div>`
 
-2) Create a new `SubscribeEmail` instance somewhere in the page's JavaScript. The only parameters that are required are `element`, which is a DOM element, jQuery element, or selector string to refer to the placeholder element and `service` which is the name of mailing list platform you are using.
+2) Create a new `SubscribeEmail` instance somewhere in the page's JavaScript. The only parameters that are required are `element`, which is a DOM element, jQuery element, or selector string to refer to the placeholder element and `service` which is the name of mailing list platform you are using. Depending on the service, you may need an API key, which you can define with the `key` parameter.
 ```
   new SubscribeEmail({
     element: '#subscribe-form',
-    service: 'mailchimp'
+    service: 'universe',
+    key: 'your-api-key-here'
   });
 ```
 
@@ -38,6 +39,8 @@ The module can be configured with several optional parameters passed to it's con
 
 - `element`: **(Required)** A DOM element, jQuery element, or selector string to refer to the placeholder element.
 - `service`: **(Required)** The mailing list platform you are using. Available options are `mailchimp`, `sendgrid` and `universe`.
+- `key`: An API key if required by your mailing list platform.
+- `submitText`: A string to be used on the form's submit button. Defaults to "Subscribe".
 - `template`: A string of the name of the compiled handlebars template to use to render the form. Available templates are `'BEM-with-messaging'` or `'BEM-minimal'` (default). See "Customizing the Templates" below for more information.
 - `async`: Whether the form with be submitted asynchronously (defaults to false).
 

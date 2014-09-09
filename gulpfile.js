@@ -15,5 +15,5 @@ var requireDir = require('require-dir');
 requireDir('./gulp', { recurse: true });
 
 // Task groups
-gulp.task('default', ['build']);
+gulp.task('default', ['build', 'startServer']);
 gulp.task('build', ['browserify']);

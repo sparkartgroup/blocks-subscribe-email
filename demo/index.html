@@ -4,31 +4,14 @@
     <script src="../build/subscribe-email.js"></script>
   </head>
   <body>
-    <p>Here's a MailChimp subscribe form!</p>
-    <div id="subscribe-form1">1</div>
-    <p>Here's a SendGrid subscribe form!</p>
-    <div id="subscribe-form2">2</div>
     <p>Here's a Universe subscribe form!</p>
-    <div id="subscribe-form3">3</div>
+    <div id="subscribe-form">No-script fallback can go here.</div>
     <script>
       new SubscribeEmail({
-        element: '#subscribe-form1',
-        submitText: 'Sign Up',
-        service: 'mailchimp'
-      });
-    </script>
-    <script>
-      new SubscribeEmail({
-        element: '#subscribe-form2',
+        element: '#subscribe-form',
         submitText: 'Subscribe',
-        service: 'sendgrid'
-      });
-    </script>
-    <script>
-      new SubscribeEmail({
-        element: '#subscribe-form3',
-        submitText: 'Send',
-        service: 'universe'
+        service: 'universe',
+        key: 'd54e8487-e44e-4c6f-bdd7-6ab9c2eae1e9'
       });
     </script>
   </body>

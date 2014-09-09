@@ -5,41 +5,75 @@
   if (typeof define === 'function' && define.amd) {
     define(['handlebars'], factory);
   } else if (typeof exports === 'object') {
-    module.exports = factory(require('./templates/BEM-with-messaging.hbs'));
+    module.exports = factory(require('./templates/BEM-with-messaging.hbs'), require('form-serialize'), function(a){console.log(a);});
   } else {
     root.SubscribeEmail = factory(root.handlebars);
   }
-}(this, function (template) {
+}(this, function (template, serialize) {
 
   this.SubscribeEmail = function(options){
+
     var placeholder = document.querySelector(options.element);
+    var serviceConfig = configureService(options.service);
+
+    //Merge the serviceConfig object into the template options
+    for (var attrname in serviceConfig) { options[attrname] = serviceConfig[attrname]; }
+
+    //Render Template
+    placeholder.innerHTML = template(options);
+
+    //Over-ride Default Submit Action with CORS request
+    placeholder.querySelector('form').addEventListener("submit", function(e) {
+      e.preventDefault();
+      var requestData = serialize(this) + "&amp;key=" + options.key;
+      makeCorsRequest(serviceConfig.formAction, requestData);
+    });
+
+  };
+
+  function configureService(service) {
     var serviceConfig = {};
-    switch (options.service) {
-      case 'mailchimp':
+    switch (service) {
+      case 'universe':
         serviceConfig = {
-          formAction: 'http://mailchimp-api.com/route',
-          formMethod: 'POST',
-          emailName: 'EMAIL'
-        };
-        break;
-      case 'sendgrid':
-        serviceConfig = {
-          formAction: 'http://sendgrid-api.com/route',
-          formMethod: 'POST'
+          formAction: 'http://staging.services.sparkart.net/api/v1/contacts',
+          emailName: 'contact[email]'
         };
         break;
       default:
         serviceConfig = {
-          formAction: '',
-          formMethod: ''
+          formAction: ''
         };
         break;
     }
-    //Merge the serviceConfig object into the template options
-    for (var attrname in serviceConfig) { options[attrname] = serviceConfig[attrname]; }
+    return serviceConfig;
+  }
 
-    placeholder.innerHTML = template(options);
-  };
+  function makeCorsRequest(url, data) {
+    var xhr = createCorsRequest('POST', url);
+    if (!xhr) {
+      console.log('CORS not supported');
+      return;
+    }
+    xhr.onload = function() {
+      console.log(xhr.responseText);
+    };
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.send(data);
+  }
+
+  function createCorsRequest(method, url) {
+    var xhr = new XMLHttpRequest();
+    if ("withCredentials" in xhr) {
+      xhr.open(method, url, true);
+    } else if (typeof XDomainRequest != "undefined") {
+      xhr = new XDomainRequest();
+      xhr.open(method, url);
+    } else {
+      xhr = null;
+    }
+    return xhr;
+  }
 
   return this.SubscribeEmail;
 }));
