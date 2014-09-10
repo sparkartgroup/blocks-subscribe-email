@@ -29,7 +29,7 @@
     //Override Default Submit Action with CORS request
     theForm.addEventListener('submit', function(e) {
       e.preventDefault();
-      var requestData = serialize(this) + '&amp;key=' + options.key;
+      var requestData = prepareData(this, options);
       makeCorsRequest(serviceConfig.formAction, requestData, theForm);
     });
 
@@ -40,6 +40,22 @@
 
   };
 
+  function prepareData(data, options) {
+    var requestData = '';
+    switch (options.service) {
+      case 'universe':
+        requestData = serialize(data) + '&key=' + options.key;
+        break;
+      case 'sendgrid':
+        requestData = serialize(data) +
+        '&p=' + encodeURIComponent(options.key) +
+        '&r=' + window.location;
+        break;
+    }
+    //requestData = encodeURIComponent(requestData);
+    return requestData;
+  }
+
   function configureService(service) {
     var serviceConfig = {};
     switch (service) {
@@ -47,6 +63,12 @@
         serviceConfig = {
           formAction: 'http://staging.services.sparkart.net/api/v1/contacts',
           emailName: 'contact[email]'
+        };
+        break;
+      case 'sendgrid':
+        serviceConfig = {
+          formAction: 'https://sendgrid.com/newsletter/addRecipientFromWidget',
+          emailName: 'SG_widget[email]'
         };
         break;
       default:
@@ -67,10 +89,15 @@
     xhr.onload = function() {
       var response = JSON.parse(xhr.responseText);
 
-      response.messages.forEach(function(message){
-        var msgEvent = new CustomEvent('message', { 'detail': message });
+      if (response.message) {
+        var msgEvent = new CustomEvent('message', { 'detail': response.message });
         form.dispatchEvent(msgEvent);
-      });
+      } else if (response.messages) {
+        response.messages.forEach(function(message){
+          var msgEvent = new CustomEvent('message', { 'detail': message });
+          form.dispatchEvent(msgEvent);
+        });
+      }
 
     };
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
