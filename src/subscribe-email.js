@@ -5,34 +5,36 @@
   if (typeof define === 'function' && define.amd) {
     define(['handlebars'], factory);
   } else if (typeof exports === 'object') {
-    module.exports = factory(require('./templates/BEM-with-messaging.hbs'), require('form-serialize'), function(a){console.log(a);});
+    module.exports = factory(require('./templates/BEM-with-messaging.hbs'), require('form-serialize'));
   } else {
     root.SubscribeEmail = factory(root.handlebars);
   }
 }(this, function (template, serialize) {
 
   this.SubscribeEmail = function(options){
+    var theForm = document.querySelector(options.element);
 
-    var placeholder = document.querySelector(options.element);
     var serviceConfig = configureService(options.service);
+    //Merge the serviceConfig object into the options
+    for (var attrname in serviceConfig) {
+      options[attrname] = serviceConfig[attrname];
+    }
 
-    //Merge the serviceConfig object into the template options
-    for (var attrname in serviceConfig) { options[attrname] = serviceConfig[attrname]; }
+    if (options.template) {
+      //Render the Default Template
+      theForm.innerHTML = template(options);
+    }
+    var messageHolder = theForm.querySelector('.message');
 
-    //Render Template
-    placeholder.innerHTML = template(options);
-
-    var messageHolder = document.querySelector('#subscribe-email-message');
-
-    //Over-ride Default Submit Action with CORS request
-    placeholder.querySelector('form').addEventListener('submit', function(e) {
+    //Override Default Submit Action with CORS request
+    theForm.addEventListener('submit', function(e) {
       e.preventDefault();
       var requestData = serialize(this) + '&amp;key=' + options.key;
-      console.log(requestData);
-      makeCorsRequest(serviceConfig.formAction, requestData);
+      makeCorsRequest(serviceConfig.formAction, requestData, theForm);
     });
 
-    document.addEventListener('subscribe-email-message', function (e) {
+    //Listen for Message Events triggered on the form.
+    theForm.addEventListener('message', function (e) {
       messageHolder.innerHTML = e.detail;
     });
 
@@ -56,7 +58,7 @@
     return serviceConfig;
   }
 
-  function makeCorsRequest(url, data) {
+  function makeCorsRequest(url, data, form) {
     var xhr = createCorsRequest('POST', url);
     if (!xhr) {
       console.log('CORS not supported');
@@ -66,8 +68,8 @@
       var response = JSON.parse(xhr.responseText);
 
       response.messages.forEach(function(message){
-        var msgEvent = new CustomEvent('subscribe-email-message', { 'detail': message });
-        document.dispatchEvent(msgEvent);
+        var msgEvent = new CustomEvent('message', { 'detail': message });
+        form.dispatchEvent(msgEvent);
       });
 
     };

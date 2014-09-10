@@ -5,11 +5,15 @@
   </head>
   <body>
     <p>Here's a Universe subscribe form!</p>
-    <div id="subscribe-form">No-script fallback can go here.</div>
+    <form id="subscribe-form">
+      <input type="email" required name="contact[email]" value="josiah.sprague@gmail.com">
+      <input type="submit" value="Subscribe">
+      <p class="message"></p>
+    </form>
     <script>
       new SubscribeEmail({
         element: '#subscribe-form',
-        submitText: 'Subscribe',
+        template: false,
         service: 'universe',
         key: 'd54e8487-e44e-4c6f-bdd7-6ab9c2eae1e9'
       });
