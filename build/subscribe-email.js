@@ -1,6 +1,6 @@
-!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.SubscribeEmail=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var template = require('./templates/BEM-with-messaging.hbs');
-var serialize = require('form-serialize');
+!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.SubscribeEmail=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
+var template = _dereq_('./templates/BEM-with-messaging.hbs');
+var serialize = _dereq_('form-serialize');
 
 module.exports = {
 
@@ -111,7 +111,7 @@ module.exports = {
   }
 
 };
-},{"./templates/BEM-with-messaging.hbs":11,"form-serialize":2}],2:[function(require,module,exports){
+},{"./templates/BEM-with-messaging.hbs":11,"form-serialize":2}],2:[function(_dereq_,module,exports){
 // get successful control from form and assemble into object
 // http://www.w3.org/TR/html401/interact/forms.html#h-17.13.2
 
@@ -288,17 +288,17 @@ function extract_from_brackets(result, key, value) {
 
 module.exports = serialize;
 
-},{}],3:[function(require,module,exports){
+},{}],3:[function(_dereq_,module,exports){
 "use strict";
 /*globals Handlebars: true */
-var base = require("./handlebars/base");
+var base = _dereq_("./handlebars/base");
 
 // Each of these augment the Handlebars object. No need to setup here.
 // (This is done to easily share code between commonjs and browse envs)
-var SafeString = require("./handlebars/safe-string")["default"];
-var Exception = require("./handlebars/exception")["default"];
-var Utils = require("./handlebars/utils");
-var runtime = require("./handlebars/runtime");
+var SafeString = _dereq_("./handlebars/safe-string")["default"];
+var Exception = _dereq_("./handlebars/exception")["default"];
+var Utils = _dereq_("./handlebars/utils");
+var runtime = _dereq_("./handlebars/runtime");
 
 // For compatibility and usage outside of module systems, make the Handlebars object a namespace
 var create = function() {
@@ -321,10 +321,10 @@ var Handlebars = create();
 Handlebars.create = create;
 
 exports["default"] = Handlebars;
-},{"./handlebars/base":4,"./handlebars/exception":5,"./handlebars/runtime":6,"./handlebars/safe-string":7,"./handlebars/utils":8}],4:[function(require,module,exports){
+},{"./handlebars/base":4,"./handlebars/exception":5,"./handlebars/runtime":6,"./handlebars/safe-string":7,"./handlebars/utils":8}],4:[function(_dereq_,module,exports){
 "use strict";
-var Utils = require("./utils");
-var Exception = require("./exception")["default"];
+var Utils = _dereq_("./utils");
+var Exception = _dereq_("./exception")["default"];
 
 var VERSION = "1.3.0";
 exports.VERSION = VERSION;var COMPILER_REVISION = 4;
@@ -502,7 +502,7 @@ exports.log = log;var createFrame = function(object) {
   return obj;
 };
 exports.createFrame = createFrame;
-},{"./exception":5,"./utils":8}],5:[function(require,module,exports){
+},{"./exception":5,"./utils":8}],5:[function(_dereq_,module,exports){
 "use strict";
 
 var errorProps = ['description', 'fileName', 'lineNumber', 'message', 'name', 'number', 'stack'];
@@ -531,12 +531,12 @@ function Exception(message, node) {
 Exception.prototype = new Error();
 
 exports["default"] = Exception;
-},{}],6:[function(require,module,exports){
+},{}],6:[function(_dereq_,module,exports){
 "use strict";
-var Utils = require("./utils");
-var Exception = require("./exception")["default"];
-var COMPILER_REVISION = require("./base").COMPILER_REVISION;
-var REVISION_CHANGES = require("./base").REVISION_CHANGES;
+var Utils = _dereq_("./utils");
+var Exception = _dereq_("./exception")["default"];
+var COMPILER_REVISION = _dereq_("./base").COMPILER_REVISION;
+var REVISION_CHANGES = _dereq_("./base").REVISION_CHANGES;
 
 function checkRevision(compilerInfo) {
   var compilerRevision = compilerInfo && compilerInfo[0] || 1,
@@ -669,7 +669,7 @@ exports.program = program;function invokePartial(partial, name, context, helpers
 exports.invokePartial = invokePartial;function noop() { return ""; }
 
 exports.noop = noop;
-},{"./base":4,"./exception":5,"./utils":8}],7:[function(require,module,exports){
+},{"./base":4,"./exception":5,"./utils":8}],7:[function(_dereq_,module,exports){
 "use strict";
 // Build out our basic SafeString type
 function SafeString(string) {
@@ -681,10 +681,10 @@ SafeString.prototype.toString = function() {
 };
 
 exports["default"] = SafeString;
-},{}],8:[function(require,module,exports){
+},{}],8:[function(_dereq_,module,exports){
 "use strict";
 /*jshint -W004 */
-var SafeString = require("./safe-string")["default"];
+var SafeString = _dereq_("./safe-string")["default"];
 
 var escape = {
   "&": "&amp;",
@@ -758,17 +758,17 @@ exports.escapeExpression = escapeExpression;function isEmpty(value) {
 }
 
 exports.isEmpty = isEmpty;
-},{"./safe-string":7}],9:[function(require,module,exports){
+},{"./safe-string":7}],9:[function(_dereq_,module,exports){
 // Create a simple path alias to allow browserify to resolve
 // the runtime on a supported path.
-module.exports = require('./dist/cjs/handlebars.runtime');
+module.exports = _dereq_('./dist/cjs/handlebars.runtime');
 
-},{"./dist/cjs/handlebars.runtime":3}],10:[function(require,module,exports){
-module.exports = require("handlebars/runtime")["default"];
+},{"./dist/cjs/handlebars.runtime":3}],10:[function(_dereq_,module,exports){
+module.exports = _dereq_("handlebars/runtime")["default"];
 
-},{"handlebars/runtime":9}],11:[function(require,module,exports){
+},{"handlebars/runtime":9}],11:[function(_dereq_,module,exports){
 // hbsfy compiled Handlebars template
-var HandlebarsCompiler = require('hbsfy/runtime');
+var HandlebarsCompiler = _dereq_('hbsfy/runtime');
 module.exports = HandlebarsCompiler.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
