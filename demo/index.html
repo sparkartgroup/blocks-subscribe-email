@@ -4,7 +4,7 @@
     <script src="../build/subscribe-email.js"></script>
   </head>
   <body>
-    
+
     <p>Here's a Universe subscribe form!</p>
     <form id="subscribe-form">
       <input type="email" required name="contact[email]" value="josiah.sprague@gmail.com">
@@ -12,8 +12,26 @@
       <p class="message"></p>
     </form>
 
+    <script>
+      SubscribeEmail.init({
+        element: '#subscribe-form',
+        template: false,
+        service: 'universe',
+        key: 'd54e8487-e44e-4c6f-bdd7-6ab9c2eae1e9'
+      });
+    </script>
+
     <p>Here's a SendGrid subscribe form!</p>
     <form id="subscribe-form2"></form>
+
+    <script>
+      SubscribeEmail.init({
+        element: '#subscribe-form2',
+        template: true,
+        service: 'sendgrid',
+        key: 'SDA+fsU1Qw6S6JIXfgrPngHjsFrn2z8v7VWCgt+a0ln11bNnVF1tvSwDWEK/pRiO'
+      });
+    </script>
 
   </body>
 </html>

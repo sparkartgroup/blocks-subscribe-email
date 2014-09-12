@@ -2,7 +2,7 @@
   "name": "subscribe-email",
   "version": "0.0.0",
   "private": true,
-  "main": "src/subscribe-email.js",
+  "main": "build/subscribe-email.js",
   "browserify": {
     "transform": [
       "hbsfy"
