@@ -1,20 +1,13 @@
-// This JavaScript module is exported as UMD following the pattern which can be
-// found here: https://github.com/umdjs/umd/blob/master/returnExports.js
+var template = require('./templates/BEM-with-messaging.hbs');
+var serialize = require('form-serialize');
 
-(function (root, factory) {
-  if (typeof define === 'function' && define.amd) {
-    define(['handlebars'], factory);
-  } else if (typeof exports === 'object') {
-    module.exports = factory(require('./templates/BEM-with-messaging.hbs'), require('form-serialize'));
-  } else {
-    root.SubscribeEmail = factory(root.handlebars);
-  }
-}(this, function (template, serialize) {
+module.exports = {
 
-  this.SubscribeEmail = function(options){
+  init: function(options) {
     var theForm = document.querySelector(options.element);
+    var serviceConfig = this.configureService(options.service);
+    var instance = this;
 
-    var serviceConfig = configureService(options.service);
     //Merge the serviceConfig object into the options
     for (var attrname in serviceConfig) {
       options[attrname] = serviceConfig[attrname];
@@ -29,8 +22,8 @@
     //Override Default Submit Action with CORS request
     theForm.addEventListener('submit', function(e) {
       e.preventDefault();
-      var requestData = prepareData(this, options);
-      makeCorsRequest(serviceConfig.formAction, requestData, theForm);
+      var requestData = instance.prepareData(this, options);
+      instance.makeCorsRequest(serviceConfig.formAction, requestData, theForm);
     });
 
     //Listen for Message Events triggered on the form.
@@ -38,9 +31,9 @@
       messageHolder.innerHTML = e.detail;
     });
 
-  };
+  },
 
-  function prepareData(data, options) {
+  prepareData: function(data, options) {
     var requestData = '';
     switch (options.service) {
       case 'universe':
@@ -52,11 +45,10 @@
         '&r=' + window.location;
         break;
     }
-    //requestData = encodeURIComponent(requestData);
     return requestData;
-  }
+  },
 
-  function configureService(service) {
+  configureService: function(service) {
     var serviceConfig = {};
     switch (service) {
       case 'universe':
@@ -78,10 +70,10 @@
         break;
     }
     return serviceConfig;
-  }
+  },
 
-  function makeCorsRequest(url, data, form) {
-    var xhr = createCorsRequest('POST', url);
+  makeCorsRequest: function(url, data, form) {
+    var xhr = this.createCorsRequest('POST', url);
     if (!xhr) {
       console.log('CORS not supported');
       return;
@@ -102,9 +94,9 @@
     };
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.send(data);
-  }
+  },
 
-  function createCorsRequest(method, url) {
+  createCorsRequest: function(method, url) {
     var xhr = new XMLHttpRequest();
     if ('withCredentials' in xhr) {
       xhr.open(method, url, true);
@@ -117,5 +109,4 @@
     return xhr;
   }
 
-  return this.SubscribeEmail;
-}));
+};

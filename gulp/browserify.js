@@ -9,11 +9,9 @@ gulp.task('browserify', function() {
     // Required watchify args
     cache: {}, packageCache: {}, fullPaths: true,
     // Specify the entry point of your app
-    entries: ['./src/subscribe-email.js'],
+    entries: ['./demo/bundle.js'],
     // Add file extentions to make optional in your requires
-    extensions: ['.hbs'],
-    // Enable source maps!
-    debug: true
+    extensions: ['.hbs']
   });
 
   var bundle = function() {
