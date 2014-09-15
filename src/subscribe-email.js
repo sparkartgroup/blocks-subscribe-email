@@ -4,6 +4,7 @@ var serialize = require('form-serialize');
 module.exports = {
 
   init: function(options) {
+    options = this.setDefaults(options);
     var theForm = document.querySelector(options.element);
     var serviceConfig = this.configureService(options.service);
     var instance = this;
@@ -16,8 +17,11 @@ module.exports = {
     if (options.template) {
       //Render the Default Template
       theForm.innerHTML = template(options);
+      //Add BEM Namespace Class to Form
+      theForm.classList.add('subscribe-email');
     }
-    var messageHolder = theForm.querySelector('.message');
+
+    var messageHolder = theForm.querySelector(options.responseElement);
 
     //Override Default Submit Action with CORS request
     theForm.addEventListener('submit', function(e) {
@@ -28,9 +32,19 @@ module.exports = {
 
     //Listen for Message Events triggered on the form.
     theForm.addEventListener('message', function (e) {
-      messageHolder.innerHTML = e.detail;
+      if (messageHolder) {
+        messageHolder.innerHTML = e.detail;
+      } else {
+        console.log(e.detail);
+      }
     });
+  },
 
+  setDefaults: function(options) {
+    options.template = options.template || false;
+    options.submitText = options.submitText || 'Subscribe';
+    options.responseElement = options.responseElement || '.subscribe-email__response';
+    return options;
   },
 
   prepareData: function(data, options) {

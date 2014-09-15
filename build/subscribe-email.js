@@ -5,6 +5,7 @@ var serialize = _dereq_('form-serialize');
 module.exports = {
 
   init: function(options) {
+    options = this.setDefaults(options);
     var theForm = document.querySelector(options.element);
     var serviceConfig = this.configureService(options.service);
     var instance = this;
@@ -17,8 +18,11 @@ module.exports = {
     if (options.template) {
       //Render the Default Template
       theForm.innerHTML = template(options);
+      //Add BEM Namespace Class to Form
+      theForm.classList.add('subscribe-email');
     }
-    var messageHolder = theForm.querySelector('.message');
+
+    var messageHolder = theForm.querySelector(options.responseElement);
 
     //Override Default Submit Action with CORS request
     theForm.addEventListener('submit', function(e) {
@@ -29,9 +33,19 @@ module.exports = {
 
     //Listen for Message Events triggered on the form.
     theForm.addEventListener('message', function (e) {
-      messageHolder.innerHTML = e.detail;
+      if (messageHolder) {
+        messageHolder.innerHTML = e.detail;
+      } else {
+        console.log(e.detail);
+      }
     });
+  },
 
+  setDefaults: function(options) {
+    options.template = options.template || false;
+    options.submitText = options.submitText || 'Subscribe';
+    options.responseElement = options.responseElement || '.subscribe-email__response';
+    return options;
   },
 
   prepareData: function(data, options) {
@@ -775,11 +789,15 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<input type=\"email\" name=\"";
+  buffer += "<input class=\"subscribe-email__input subscribe-email__input--email\" type=\"email\" name=\"";
   if (helper = helpers.emailName) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.emailName); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\" required>\n<input type=\"submit\" value=\"Subscribe\" name=\"submit\">\n<p class=\"message\"></p>";
+    + "\" required>\n<input class=\"subscribe-email__button\"  type=\"submit\" value=\"";
+  if (helper = helpers.submitText) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.submitText); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" name=\"submit\">\n<p class=\"subscribe-email__response\"></p>";
   return buffer;
   });
 
