@@ -15,7 +15,7 @@ function SubscribeEmail (options) {
     options[attrname] = serviceConfig[attrname];
   }
 
-  if (options.template) {
+  if (!options.overrideTemplate) {
     //Render the Default Template
     theForm.innerHTML = template(options);
     //Add BEM Namespace Class to Form
@@ -32,17 +32,26 @@ function SubscribeEmail (options) {
   });
 
   //Listen for Message Events triggered on the form.
-  theForm.addEventListener('message', function (e) {
-    if (messageHolder) {
-      messageHolder.innerHTML = e.detail;
-    } else {
+  theForm.addEventListener('subscriptionMessage', function (e) {
+    if (!messageHolder) {
       console.log(e.detail);
+    } else {
+      if (typeof e.detail === 'string') {
+        messageHolder.innerHTML = e.detail;
+      } else if (Array.isArray(e.detail)) {
+        messageHolder.innerHTML = '';
+        e.detail.forEach(function(message) {
+          messageHolder.innerHTML += message + '<br>';
+        });
+      } else {
+        console.log(e.detail);
+      }
     }
   });
 }
 
 function setDefaults(options) {
-  options.template = options.template || false;
+  options.overrideTemplate = options.overrideTemplate || false;
   options.submitText = options.submitText || 'Subscribe';
   options.responseElement = options.responseElement || '.subscribe-email__response';
   return options;
@@ -87,6 +96,17 @@ function configureService(service) {
   return serviceConfig;
 }
 
+function fireEvent(name, detail, el){
+  var customEvent;
+  if (window.CustomEvent) {
+    customEvent = new CustomEvent(name, {'detail': detail });
+  } else {
+    customEvent = document.createEvent('CustomEvent');
+    customEvent.initCustomEvent(name, true, true, detail);
+  }
+  el.dispatchEvent(customEvent);
+}
+
 function makeCorsRequest(url, data, form) {
   var xhr = createCorsRequest('POST', url);
   if (!xhr) {
@@ -94,19 +114,22 @@ function makeCorsRequest(url, data, form) {
     return;
   }
   xhr.onload = function() {
+
     var response = JSON.parse(xhr.responseText);
 
-    if (response.message) {
-      var msgEvent = new CustomEvent('message', { 'detail': response.message });
-      form.dispatchEvent(msgEvent);
-    } else if (response.messages) {
-      response.messages.forEach(function(message){
-        var msgEvent = new CustomEvent('message', { 'detail': message });
-        form.dispatchEvent(msgEvent);
-      });
+    //Fire Message Event(s)
+    var payload = response.message || response.messages;
+    fireEvent('subscriptionMessage', payload, form);
+
+    //Fire Success or Error Event
+    if (response.success || response.status === 'ok') {
+      fireEvent('subscriptionSuccess', response, form);
+    } else {
+      fireEvent('subscriptionError', response, form);
     }
 
   };
+  
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   xhr.send(data);
 }

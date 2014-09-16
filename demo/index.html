@@ -15,7 +15,7 @@
     <script>
       new SubscribeEmail({
         element: '#subscribe-form',
-        template: false,
+        overrideTemplate: true,
         responseElement: '.message',
         service: 'universe',
         key: 'd54e8487-e44e-4c6f-bdd7-6ab9c2eae1e9'
@@ -28,7 +28,6 @@
     <script>
       SubscribeEmail({
         element: '#subscribe-form2',
-        template: true,
         service: 'sendgrid',
         key: 'SDA+fsU1Qw6S6JIXfgrPngHjsFrn2z8v7VWCgt+a0ln11bNnVF1tvSwDWEK/pRiO'
       });
