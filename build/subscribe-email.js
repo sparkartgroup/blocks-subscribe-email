@@ -22,14 +22,19 @@ function SubscribeEmail (options) {
     theForm.classList.add('subscribe-email');
   }
 
-  var messageHolder = theForm.querySelector(options.responseElement);
+  if (options.service === 'mailchimp') {
+    theForm.action = options.key;
+    theForm.method = 'post';
+  } else {
+    //Override Default Submit Action with CORS request
+    theForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var requestData = prepareData(this, options);
+      makeCorsRequest(serviceConfig.formAction, requestData, theForm);
+    });
+  }
 
-  //Override Default Submit Action with CORS request
-  theForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    var requestData = prepareData(this, options);
-    makeCorsRequest(serviceConfig.formAction, requestData, theForm);
-  });
+  var messageHolder = theForm.querySelector(options.responseElement);
 
   //Listen for Message Events triggered on the form.
   theForm.addEventListener('subscriptionMessage', function (e) {
@@ -87,6 +92,11 @@ function configureService(service) {
         emailName: 'SG_widget[email]'
       };
       break;
+    case 'mailchimp':
+      serviceConfig = {
+        emailName: 'EMAIL'
+      };
+      break;
     default:
       serviceConfig = {
         formAction: ''
@@ -129,7 +139,7 @@ function makeCorsRequest(url, data, form) {
     }
 
   };
-  
+
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   xhr.send(data);
 }
