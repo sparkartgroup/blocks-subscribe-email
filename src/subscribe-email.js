@@ -25,6 +25,18 @@ function SubscribeEmail (options) {
     theForm.classList.add('subscribe-email');
   }
 
+  if (options.service === 'mailchimp') {
+    theForm.action = options.key;
+    theForm.method = 'post';
+  } else {
+    //Override Default Submit Action with CORS request
+    theForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var requestData = prepareData(this, options);
+      makeCorsRequest(serviceConfig.formAction, requestData, theForm);
+    });
+  }
+
   var messageHolder = theForm.querySelector(options.responseElement);
 
   //Override Default Submit Action with CORS request
@@ -79,6 +91,11 @@ function configureService(service) {
       serviceConfig = {
         formAction: 'https://sendgrid.com/newsletter/addRecipientFromWidget',
         emailName: 'SG_widget[email]'
+      };
+      break;
+    case 'mailchimp':
+      serviceConfig = {
+        emailName: 'EMAIL'
       };
       break;
     default:
