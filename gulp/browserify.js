@@ -12,7 +12,6 @@ var hbsfy = require('hbsfy').configure({
 gulp.task('browserify', function() {
   var bundler = browserify({
     entries: ['./src/subscribe-email.js'],
-    extensions: ['.hbs'],
     standalone: 'SubscribeEmail'
   });
 

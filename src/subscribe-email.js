@@ -1,4 +1,4 @@
-var template = require('./templates/BEM-with-messaging.hbs');
+var template = require('./template.hbs');
 var serialize = require('form-serialize');
 
 module.exports = SubscribeEmail;
