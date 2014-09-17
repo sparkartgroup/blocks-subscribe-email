@@ -15,6 +15,23 @@
     "hbsfy": "^2.1.0",
     "pretty-hrtime": "^0.2.1",
     "require-dir": "^0.1.0",
+    "tape": "^3.0.0",
     "vinyl-source-stream": "^0.1.1"
+  },
+  "testling": {
+    "files": "tests/*.js",
+    "browsers": [
+      "ie/6..latest",
+      "chrome/22..latest",
+      "firefox/16..latest",
+      "safari/latest",
+      "opera/11.0..latest",
+      "iphone/6",
+      "ipad/6",
+      "android-browser/latest"
+    ]
+  },
+  "scripts": {
+    "test": "tape tests/*.js"
   }
 }
