@@ -19,15 +19,14 @@
     "vinyl-source-stream": "^0.1.1"
   },
   "testling": {
-    "files": "tests/*.js",
+    "html": "tests/tests.html",
     "browsers": [
-      "ie/6..latest",
-      "chrome/22..latest",
-      "firefox/16..latest",
-      "safari/latest",
-      "opera/11.0..latest",
-      "iphone/6",
-      "ipad/6",
+      "ie/9..latest",
+      "chrome/36..latest",
+      "ff/24..latest",
+      "safari/6..latest",
+      "iphone/6..latest",
+      "ipad/6..latest",
       "android-browser/latest"
     ]
   },
