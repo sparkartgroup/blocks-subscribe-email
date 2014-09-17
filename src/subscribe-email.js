@@ -1,10 +1,14 @@
 var template = require('./template.hbs');
 var serialize = require('form-serialize');
+var inherits = require('inherits');
+var EventEmitter = require('events').EventEmitter;
 
+inherits(SubscribeEmail, EventEmitter);
 module.exports = SubscribeEmail;
 
 function SubscribeEmail (options) {
   if (!(this instanceof SubscribeEmail)) return new SubscribeEmail(options);
+  var instance = this;
   options = setDefaults(options);
   var theForm = document.querySelector(options.element);
   var serviceConfig = configureService(options.service);
@@ -27,24 +31,15 @@ function SubscribeEmail (options) {
   theForm.addEventListener('submit', function(e) {
     e.preventDefault();
     var requestData = prepareData(this, options);
-    makeCorsRequest(serviceConfig.formAction, requestData, theForm);
+    instance.makeCorsRequest(serviceConfig.formAction, requestData, theForm);
   });
 
-  //Listen for Message Events triggered on the form.
-  theForm.addEventListener('subscriptionMessage', function (e) {
+  //Listen for Message Events
+  this.on('subscriptionMessage', function (message) {
     if (!messageHolder) {
-      console.log(e.detail);
+      console.log(message);
     } else {
-      if (typeof e.detail === 'string') {
-        messageHolder.innerHTML = e.detail;
-      } else if (Array.isArray(e.detail)) {
-        messageHolder.innerHTML = '';
-        e.detail.forEach(function(message) {
-          messageHolder.innerHTML += message + '<br>';
-        });
-      } else {
-        console.log(e.detail);
-      }
+      messageHolder.innerHTML = message;
     }
   });
 }
@@ -95,43 +90,39 @@ function configureService(service) {
   return serviceConfig;
 }
 
-function fireEvent(name, detail, el){
-  var customEvent;
-  if (window.CustomEvent) {
-    customEvent = new CustomEvent(name, {'detail': detail });
-  } else {
-    customEvent = document.createEvent('CustomEvent');
-    customEvent.initCustomEvent(name, true, true, detail);
-  }
-  el.dispatchEvent(customEvent);
-}
-
-function makeCorsRequest(url, data, form) {
+SubscribeEmail.prototype.makeCorsRequest = function (url, data, form) {
+  var instance = this;
   var xhr = createCorsRequest('POST', url);
   if (!xhr) {
     console.log('CORS not supported');
     return;
   }
+
   xhr.onload = function() {
 
     var response = JSON.parse(xhr.responseText);
 
     //Fire Message Event(s)
-    var payload = response.message || response.messages;
-    fireEvent('subscriptionMessage', payload, form);
+    if (response.message) {
+      instance.emit('subscriptionMessage', response.message);
+    } else if (response.messages) {
+      response.messages.forEach(function(message) {
+        instance.emit('subscriptionMessage', message);
+      });
+    }
 
     //Fire Success or Error Event
     if (response.success || response.status === 'ok') {
-      fireEvent('subscriptionSuccess', response, form);
+      instance.emit('subscriptionSuccess', response);
     } else {
-      fireEvent('subscriptionError', response, form);
+      instance.emit('subscriptionError', response);
     }
 
   };
-  
+
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   xhr.send(data);
-}
+};
 
 function createCorsRequest(method, url) {
   var xhr = new XMLHttpRequest();

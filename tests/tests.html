@@ -13,12 +13,22 @@
     </form>
 
     <script>
-      new SubscribeEmail({
+      var universeForm = new SubscribeEmail({
         element: '#subscribe-form',
         overrideTemplate: true,
         responseElement: '.message',
         service: 'universe',
         key: 'd54e8487-e44e-4c6f-bdd7-6ab9c2eae1e9'
+      });
+
+      universeForm.on('subscriptionMessage', function (payload) {
+          console.log("Message: ", payload);
+      });
+      universeForm.on('subscriptionError', function (payload) {
+          console.log("Error:", payload);
+      });
+      universeForm.on('subscriptionSuccess', function (payload) {
+          console.log("Success:", payload);
       });
     </script>
 
@@ -26,10 +36,14 @@
     <form id="subscribe-form2"></form>
 
     <script>
-      SubscribeEmail({
+      var sendGridForm = SubscribeEmail({
         element: '#subscribe-form2',
         service: 'sendgrid',
         key: 'SDA+fsU1Qw6S6JIXfgrPngHjsFrn2z8v7VWCgt+a0ln11bNnVF1tvSwDWEK/pRiO'
+      });
+
+      sendGridForm.on('subscriptionMessage', function (payload) {
+          console.log("SendGrid Message: ", payload);
       });
     </script>
 
