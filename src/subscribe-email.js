@@ -11,12 +11,6 @@ function SubscribeEmail (options) {
   var instance = this;
   options = setDefaults(options);
   var theForm = document.querySelector(options.element);
-  var serviceConfig = configureService(options.service);
-
-  //Merge the serviceConfig object into the options
-  for (var attrname in serviceConfig) {
-    options[attrname] = serviceConfig[attrname];
-  }
 
   if (!options.overrideTemplate) {
     //Render the Default Template
@@ -31,7 +25,11 @@ function SubscribeEmail (options) {
   theForm.addEventListener('submit', function(e) {
     e.preventDefault();
     var requestData = prepareData(this, options);
-    instance.makeCorsRequest(serviceConfig.formAction, requestData, theForm);
+    if (options.service === 'mailchimp') {
+      instance.makeJSONPRequest(options.formAction, requestData, theForm);
+    } else {
+      instance.makeCorsRequest(options.formAction, requestData, theForm);
+    }
   });
 
   //Listen for Message Events
@@ -48,6 +46,24 @@ function setDefaults(options) {
   options.overrideTemplate = options.overrideTemplate || false;
   options.submitText = options.submitText || 'Subscribe';
   options.responseElement = options.responseElement || '.subscribe-email__response';
+
+  switch (options.service) {
+    case 'universe':
+      options.formAction = options.formAction || 'http://staging.services.sparkart.net/api/v1/contacts';
+      options.emailName = options.emailName || 'contact[email]';
+      break;
+    case 'sendgrid':
+      options.formAction =  options.formAction || 'https://sendgrid.com/newsletter/addRecipientFromWidget';
+      options.emailName = options.emailName || 'SG_widget[email]';
+      break;
+    case 'mailchimp':
+      options.formAction =  options.formAction || options.url.replace('/post?', '/post-json?');
+      options.emailName =  options.emailName || 'EMAIL';
+      break;
+    default:
+      break;
+  }
+
   return options;
 }
 
@@ -62,32 +78,11 @@ function prepareData(data, options) {
       '&p=' + encodeURIComponent(options.key) +
       '&r=' + window.location;
       break;
+    case 'mailchimp':
+      requestData = '&' + serialize(data);
+      break;
   }
   return requestData;
-}
-
-function configureService(service) {
-  var serviceConfig = {};
-  switch (service) {
-    case 'universe':
-      serviceConfig = {
-        formAction: 'http://staging.services.sparkart.net/api/v1/contacts',
-        emailName: 'contact[email]'
-      };
-      break;
-    case 'sendgrid':
-      serviceConfig = {
-        formAction: 'https://sendgrid.com/newsletter/addRecipientFromWidget',
-        emailName: 'SG_widget[email]'
-      };
-      break;
-    default:
-      serviceConfig = {
-        formAction: ''
-      };
-      break;
-  }
-  return serviceConfig;
 }
 
 SubscribeEmail.prototype.makeCorsRequest = function (url, data, form) {
@@ -136,3 +131,29 @@ function createCorsRequest(method, url) {
   }
   return xhr;
 }
+
+SubscribeEmail.prototype.getId = function() {
+  for (var id in window) {
+    if (window[id] === this) { return id; }
+  }
+};
+
+SubscribeEmail.prototype.makeJSONPRequest = function (url, data, form) {
+  var scriptElement = document.createElement('script');
+  scriptElement.src = url + data + '&c=' + this.getId() + '.processJSONP';
+  form.appendChild(scriptElement);
+};
+
+SubscribeEmail.prototype.processJSONP = function(json) {
+  //Fire Message Event(s)
+  if (json.msg) {
+    this.emit('subscriptionMessage', json.msg);
+  }
+
+  //Fire Success or Error Event
+  if (json.result === 'success') {
+    this.emit('subscriptionSuccess', json);
+  } else {
+    this.emit('subscriptionError', json);
+  }
+};
