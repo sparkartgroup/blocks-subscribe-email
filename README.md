@@ -66,8 +66,13 @@ Whether the form with be submitted asynchronously (defaults to `true`).
 Out of the box, the Subscribe Email module will generate BEM markup with the namespace `subscribe-email` that contains all of the elements your form needs. If you want to customize the markup, set `overrideTemplate: true` when you initialize the module to use the markup from the target element instead. This gives you full control over the markup, but you'll have to make sure that your form contains all of the required fields.
 
 ## Events
-Some mailing list platforms may send response messages for things like confirmation or validation errors. The default template will display these messages along-side the form, but alternatively you can easily integrate the messages into other parts of your page by listening for the following events to fire on the form element;
+Some mailing list platforms may send response messages for things like confirmation or validation errors. The default template will display these messages along-side the form, but alternatively you can easily integrate the messages into other parts of your page by listening for the following events to be emitted from the SubscribeEmail instance;
 
-- `subscriptionMessage`: Fires whenever the mailing list provider returns a response (both success and failure).
-- `subscriptionError`: This event will fire if the mailing list provider returns an error. Specific details about the error will be included in a payload object when available.
-- `subscriptionSuccess`: This event will fire if the mailing list provider returns a confirmation that the email address has been added to the list. Specific details will be included in a payload object when available.
+### `subscriptionMessage`
+Fires whenever the mailing list provider returns a response (both success and failure).
+
+### `subscriptionError`
+This event will fire if the mailing list provider returns an error. Specific details about the error will be included in a payload object when available.
+
+### `subscriptionSuccess`
+This event will fire if the mailing list provider returns a confirmation that the email address has been added to the list. Specific details will be included in a payload object when available.

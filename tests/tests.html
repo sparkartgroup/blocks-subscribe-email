@@ -1,6 +1,7 @@
 <html>
   <head>
     <title>Subscribe Email Demo</title>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="../build/subscribe-email.js"></script>
   </head>
   <body>
@@ -13,8 +14,9 @@
     </form>
 
     <script>
+      var myForm = $('#subscribe-form');
       var universeForm = new SubscribeEmail({
-        element: '#subscribe-form',
+        element: myForm,
         overrideTemplate: true,
         responseElement: '.message',
         service: 'universe',
@@ -44,6 +46,17 @@
 
       sendGridForm.on('subscriptionMessage', function (payload) {
           console.log("SendGrid Message: ", payload);
+      });
+    </script>
+
+    <p>Here's a MailChimp subscribe form!</p>
+    <form id="subscribe-form3"></form>
+
+    <script>
+      var mailchimpForm = SubscribeEmail({
+        element: '#subscribe-form3',
+        service: 'mailchimp',
+        url: 'http://josiahsprague.us5.list-manage.com/subscribe/post?u=e91ffb6b8d4681eafd86fd883&id=596075069d'
       });
     </script>
 
