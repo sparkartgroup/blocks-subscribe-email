@@ -22,7 +22,7 @@ function SubscribeEmail (options) {
     //Render the Default Template
     theForm.innerHTML = template(options);
     //Add BEM Namespace Class to Form
-    theForm.classList.add('subscribe-email');
+    theForm.className += ' subscribe-email';
   }
 
   var messageHolder = theForm.querySelector(options.responseElement);
@@ -30,8 +30,8 @@ function SubscribeEmail (options) {
   //Override Default Submit Action with CORS request
   theForm.addEventListener('submit', function(e) {
     e.preventDefault();
-    var requestData = prepareData(this, options);
-    if (options.service === 'mailchimp') {
+    var requestData = instance.prepareData(this, options);
+    if (options.jsonp) {
       instance.makeJSONPRequest(options.formAction, requestData, theForm);
     } else {
       instance.makeCorsRequest(options.formAction, requestData, theForm);
@@ -57,14 +57,17 @@ function setDefaults(options) {
     case 'universe':
       options.formAction = options.formAction || 'http://staging.services.sparkart.net/api/v1/contacts';
       options.emailName = options.emailName || 'contact[email]';
+      options.jsonp = !('withCredentials' in new XMLHttpRequest());
       break;
     case 'sendgrid':
-      options.formAction =  options.formAction || 'https://sendgrid.com/newsletter/addRecipientFromWidget';
+      options.formAction =  options.formAction || 'http://sendgrid.com/newsletter/addRecipientFromWidget';
       options.emailName = options.emailName || 'SG_widget[email]';
+      options.jsonp = false;
       break;
     case 'mailchimp':
       options.formAction =  options.formAction || options.url.replace('/post?', '/post-json?');
       options.emailName =  options.emailName || 'EMAIL';
+      options.jsonp = true;
       break;
     default:
       break;
@@ -73,31 +76,33 @@ function setDefaults(options) {
   return options;
 }
 
-function prepareData(data, options) {
+SubscribeEmail.prototype.prepareData = function(data, options) {
   var requestData = '';
   switch (options.service) {
     case 'universe':
       requestData = serialize(data) + '&key=' + options.key;
+      if (options.jsonp) {
+        requestData = '?' + requestData +
+        '&_method=post&callback=' + this.getId() + '.processJSONP';
+      }
       break;
     case 'sendgrid':
-      requestData = serialize(data) +
-      '&p=' + encodeURIComponent(options.key) +
-      '&r=' + window.location;
+      requestData = 'p=' + encodeURIComponent(options.key) +
+      '&r=' + encodeURIComponent(window.location) + '&' +
+      serialize(data);
       break;
     case 'mailchimp':
-      requestData = '&' + serialize(data);
+      requestData = '&_method=post&' + serialize(data) +
+      '&c=' + this.getId() + '.processJSONP';
       break;
   }
   return requestData;
-}
+};
 
 SubscribeEmail.prototype.makeCorsRequest = function (url, data, form) {
   var instance = this;
-  var xhr = createCorsRequest('POST', url);
-  if (!xhr) {
-    console.log('CORS not supported');
-    return;
-  }
+  var xhr = createCorsRequest('POST', url, data);
+  if (!xhr) { return; }
 
   xhr.onload = function() {
 
@@ -121,21 +126,32 @@ SubscribeEmail.prototype.makeCorsRequest = function (url, data, form) {
 
   };
 
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  if(xhr instanceof XMLHttpRequest){
+    // Request headers cannot be set on XDomainRequest in IE9
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  }
   xhr.send(data);
 };
 
-function createCorsRequest(method, url) {
-  var xhr = new XMLHttpRequest();
-  if ('withCredentials' in xhr) {
-    xhr.open(method, url, true);
-  } else if (typeof XDomainRequest != 'undefined') {
-    xhr = new XDomainRequest();
-    xhr.open(method, url);
-  } else {
-    xhr = null;
-  }
-  return xhr;
+function createCorsRequest(method, url, data) {
+
+    var xhr;
+    if ('withCredentials' in new XMLHttpRequest()) {
+      xhr = new XMLHttpRequest();
+      xhr.open(method, url, true);
+    } else if (typeof XDomainRequest != 'undefined') {
+      xhr = new XDomainRequest();
+      //The next 6 lines must be defined here or IE9 will abort the request
+      xhr.timeout = 3000;
+      xhr.onload = function(){};
+      xhr.onerror = function (){};
+      xhr.ontimeout = function(){};
+      xhr.onprogress = function(){};
+      xhr.open('POST', url + '?' + data);
+    } else {
+      xhr = null;
+    }
+    return xhr;
 }
 
 SubscribeEmail.prototype.getId = function() {
@@ -146,14 +162,21 @@ SubscribeEmail.prototype.getId = function() {
 
 SubscribeEmail.prototype.makeJSONPRequest = function (url, data, form) {
   var scriptElement = document.createElement('script');
-  scriptElement.src = url + data + '&c=' + this.getId() + '.processJSONP';
+  scriptElement.src = url + data;
   form.appendChild(scriptElement);
 };
 
 SubscribeEmail.prototype.processJSONP = function(json) {
+  var instance = this;
   //Fire Message Event(s)
-  if (json.msg) {
+  if (json.message) {
+    this.emit('subscriptionMessage', json.message);
+  } else if (json.msg) {
     this.emit('subscriptionMessage', json.msg);
+  } else if (json.messages) {
+    json.messages.forEach(function(message) {
+      instance.emit('subscriptionMessage', message);
+    });
   }
 
   //Fire Success or Error Event
