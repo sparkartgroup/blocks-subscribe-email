@@ -18,6 +18,8 @@
     "pretty-hrtime": "^0.2.1",
     "require-dir": "^0.1.0",
     "vinyl-source-stream": "^0.1.1",
-    "assert": "~1.1.2"
+    "assert": "~1.1.2",
+    "gulp-mocha": "~1.1.0",
+    "object-merge": "~2.5.1"
   }
 }

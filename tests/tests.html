@@ -8,14 +8,14 @@
   <body>
 
     <p>Here's a Universe subscribe form!</p>
-    <form id="subscribe-form">
+    <form id="universe-form">
       <input type="email" required name="contact[email]">
       <input type="submit" value="Subscribe">
       <p class="message"></p>
     </form>
 
     <script>
-      var myForm = $('#subscribe-form');
+      var myForm = $('#universe-form');
       var universeForm = new SubscribeEmail({
         element: myForm,
         overrideTemplate: true,
@@ -36,11 +36,11 @@
     </script>
 
     <p>Here's a SendGrid subscribe form!</p>
-    <form id="subscribe-form2"></form>
+    <form id="sendgrid-form"></form>
 
     <script>
       var sendGridForm = SubscribeEmail({
-        element: '#subscribe-form2',
+        element: '#sendgrid-form',
         service: 'sendgrid',
         key: 'SDA+fsU1Qw6S6JIXfgrPngHjsFrn2z8v7VWCgt+a0ln11bNnVF1tvSwDWEK/pRiO'
       });
@@ -51,11 +51,11 @@
     </script>
 
     <p>Here's a MailChimp subscribe form!</p>
-    <form id="subscribe-form3"></form>
+    <form id="mailchimp-form"></form>
 
     <script>
       var mailchimpForm = SubscribeEmail({
-        element: '#subscribe-form3',
+        element: '#mailchimp-form',
         service: 'mailchimp',
         url: 'http://josiahsprague.us5.list-manage.com/subscribe/post?u=e91ffb6b8d4681eafd86fd883&id=596075069d'
       });
