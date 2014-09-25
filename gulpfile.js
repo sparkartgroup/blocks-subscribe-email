@@ -10,11 +10,17 @@
 */
 var gulp = require('gulp');
 var requireDir = require('require-dir');
+var runSequence = require('run-sequence');
 
 // Require all tasks in gulp/tasks, including subfolders
 requireDir('./gulp', { recurse: true });
 
 // Task groups
-gulp.task('default', ['build', 'startServer', 'test']);
-gulp.task('test', ['mocha']);
+gulp.task('default', ['build', 'startServer']);
+gulp.task('test', function(callback) {
+  runSequence('default',
+              'BrowserStackTunnel',
+              'mocha',
+              callback);
+});
 gulp.task('build', ['browserify']);
