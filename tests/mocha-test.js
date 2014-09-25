@@ -10,6 +10,22 @@ var browserStackConfig = {
   'browserstack.key' : '***REMOVED***'
 }
 
+var setups = [
+      { browser: 'Chrome',  browser_version: '36.0', os: 'Windows', os_version: '8.1'},
+      { browser: 'Chrome',  browser_version: '35.0', os: 'Windows', os_version: '8.1'},
+      { browser: 'Safari',  browser_version: '7.0', os: 'OS X', os_version: 'Mavericks'},
+      { browser: 'Safari',  browser_version: '6.1', os: 'OS X', os_version: 'Mountain Lion'},
+      { browser: 'IE',  browser_version: '9.0', os: 'Windows', os_version: '7'},
+      { browser: 'IE',  browser_version: '10.0', os: 'Windows', os_version: '7'},
+      { browser: 'IE',  browser_version: '11.0', os: 'Windows', os_version: '8.1'},
+      { browser: 'Firefox',  browser_version: '31.0', os: 'Windows', os_version: '8.1' },
+      { browser: 'Firefox',  browser_version: '30.0', os: 'Windows', os_version: '8.1' },
+      { browserName: 'iPhone',  platform: 'MAC', device: 'iPhone 5S'},
+      { browserName: 'iPhone',  platform: 'MAC', device: 'iPhone 5'},
+      { browserName: 'android',  platform: 'ANDROID', device: 'LG Nexus 4'},
+      { browserName: 'android',  platform: 'ANDROID', device: 'Motorola Razr'}
+   ];
+
 function setupDriver(capabilities) {
   driver = new webdriver.Builder().
     usingServer('http://hub.browserstack.com/wd/hub').
@@ -31,66 +47,45 @@ function testForm(driver, formId, submission, responseElement) {
   }, 2000);
 }
 
-//Test in IE 9
-test.describe('Forms work in IE 9', function() {
-  var driver;
 
-  test.before(function() {
-    var capabilities = objectMerge(browserStackConfig, {
-      'browser' : 'IE',
-      'browser_version' : '9.0',
-      'os' : 'Windows',
-      'os_version' : '7'
+setups.forEach(function (setup) {
+
+  var setupDescription;
+  if (setup.os) {
+    setupDescription = ' in ' + setup.browser +
+    ' ' + setup.browser_version +
+    ' on ' + setup.os + ' ' + setup.os_version;
+  } else if (setup.device) {
+    setupDescription = ' on ' + setup.device;
+  }
+
+  test.describe('Forms should work' + setupDescription, function() {
+    var driver;
+
+    test.before(function() {
+      var capabilities = objectMerge(browserStackConfig, setup);
+      driver = setupDriver(capabilities);
     });
-    driver = setupDriver(capabilities);
-  });
 
-  test.it('universe form works', function() {
-    var result = testForm(driver, '#universe-form', 'test@test.com', '.message');
-    return 'Please check your email for confirmation instructions' === result;
-  });
-
-  test.it('sendgrid form works', function() {
-    var result = testForm(driver, '#sendgrid-form', 'test@test.com');
-    return 'You have subscribed to this Marketing Email.' === result;
-  });
-
-  test.it('mailchimp form works', function() {
-    var result = testForm(driver, '#mailchimp-form', 'test@test.com');
-    return '0 - This email address looks fake or invalid. Please enter a real email address' === result;
-  });
-
-  test.after(function() { driver.quit(); });
-});
-
-//Test in Safari 7
-test.describe('Forms work in Safari 7', function() {
-  var driver;
-
-  test.before(function() {
-    var capabilities = objectMerge(browserStackConfig, {
-      'browser' : 'Safari',
-      'browser_version' : '7.0',
-      'os' : 'OS X',
-      'os_version' : 'Mavericks'
+    test.it('universe form with test@test.com', function() {
+      var result = testForm(driver, '#universe-form', 'test@test.com', '.message');
+      var expectedResult = new RegExp('Please check your email for confirmation','gi');
+      return expectedResult.test(result);
     });
-    driver = setupDriver(capabilities);
+
+    test.it('sendgrid form with test@test.com', function() {
+      var result = testForm(driver, '#sendgrid-form', 'test@test.com');
+      var expectedResult = new RegExp('You have subscribed','gi');
+      return expectedResult.test(result);
+    });
+
+    test.it('mailchimp form with test@test.com', function() {
+      var result = testForm(driver, '#mailchimp-form', 'test@test.com');
+      var expectedResult = new RegExp('0 - This email address looks fake','gi');
+      return expectedResult.test(result);
+    });
+
+    test.after(function() { driver.quit(); });
   });
 
-  test.it('universe form works', function() {
-    var result = testForm(driver, '#universe-form', 'test@test.com', '.message');
-    return 'Please check your email for confirmation instructions' === result;
-  });
-
-  test.it('sendgrid form works', function() {
-    var result = testForm(driver, '#sendgrid-form', 'test@test.com');
-    return 'You have subscribed to this Marketing Email.' === result;
-  });
-
-  test.it('mailchimp form works', function() {
-    var result = testForm(driver, '#mailchimp-form', 'test@test.com');
-    return '0 - This email address looks fake or invalid. Please enter a real email address' === result;
-  });
-
-  test.after(function() { driver.quit(); });
 });
