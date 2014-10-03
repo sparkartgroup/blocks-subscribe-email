@@ -54,7 +54,7 @@ function setDefaults(options) {
 
   switch (options.service) {
     case 'universe':
-      options.formAction = options.formAction || 'http://staging.services.sparkart.net/api/v1/contacts';
+      options.formAction = options.formAction || 'http://services.sparkart.net/api/v1/contacts';
       options.emailName = options.emailName || 'contact[email]';
       options.jsonp = !('withCredentials' in new XMLHttpRequest());
       break;
