@@ -126,6 +126,10 @@ SubscribeEmail.prototype.makeCorsRequest = function (url, data, form) {
 
   };
 
+  xhr.onerror = function(){
+    instance.emit('subscriptionError', 'Oops, something went wrong!');
+  };
+
   if(xhr instanceof XMLHttpRequest){
     // Request headers cannot be set on XDomainRequest in IE9
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
