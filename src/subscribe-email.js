@@ -199,7 +199,7 @@ SubscribeEmail.prototype.processJSONP = function(json) {
   }
 
   //Fire Success or Error Event
-  if (json.result === 'success') {
+  if (json.result === 'success' || json.status === 'ok') {
     this.emit('subscriptionSuccess', json);
   } else {
     this.emit('subscriptionError', json);
