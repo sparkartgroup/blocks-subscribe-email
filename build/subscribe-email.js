@@ -32,7 +32,7 @@ function SubscribeEmail (options) {
     e.preventDefault();
     var requestData = instance.prepareData(this, options);
     if (options.jsonp) {
-      instance.makeJSONPRequest(options.formAction, requestData, theForm);
+      instance.makeJSONPRequest(options.formAction, requestData);
     } else {
       instance.makeCorsRequest(options.formAction, requestData, theForm);
     }
@@ -83,7 +83,7 @@ SubscribeEmail.prototype.prepareData = function(data, options) {
       requestData = serialize(data) + '&key=' + options.key;
       if (options.jsonp) {
         requestData = '?' + requestData +
-        '&_method=post&callback=' + this.getId() + '.processJSONP';
+        '&_method=post&callback=';
       }
       break;
     case 'sendgrid':
@@ -92,8 +92,7 @@ SubscribeEmail.prototype.prepareData = function(data, options) {
       serialize(data);
       break;
     case 'mailchimp':
-      requestData = '&_method=post&' + serialize(data) +
-      '&c=' + this.getId() + '.processJSONP';
+      requestData = '&_method=post&' + serialize(data) + '&c=';
       break;
   }
   return requestData;
@@ -162,12 +161,29 @@ SubscribeEmail.prototype.getId = function() {
   for (var id in window) {
     if (window[id] === this) { return id; }
   }
+  return 'SubscribeEmail';
 };
 
-SubscribeEmail.prototype.makeJSONPRequest = function (url, data, form) {
-  var scriptElement = document.createElement('script');
-  scriptElement.src = url + data;
-  form.appendChild(scriptElement);
+SubscribeEmail.prototype.makeJSONPRequest = function (url, data) {
+  var callbackName, scriptElement;
+  var instance = this;
+
+  callbackName = "cb_" + Math.floor(Math.random() * 10000);
+
+  window[callbackName] = function(json) {
+    try {
+        delete window[callbackName];
+    }
+    catch (e) {
+        window[callbackName] = undefined;
+    }
+
+    instance.processJSONP(json);
+  };
+
+  scriptElement = document.createElement('script');
+  scriptElement.src = url + data + callbackName;
+  document.body.appendChild(scriptElement);
 };
 
 SubscribeEmail.prototype.processJSONP = function(json) {

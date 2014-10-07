@@ -3,7 +3,7 @@ var BrowserStackTunnel = require('browserstacktunnel-wrapper');
 
 gulp.task('BrowserStackTunnel', function(cb) {
   var browserStackTunnel = new BrowserStackTunnel({
-    key: '***REMOVED***',
+    key: '',
     hosts: [{
       name: 'localhost',
       port: 3000,

@@ -6,24 +6,26 @@ var objectMerge = require('object-merge');
 
 var browserStackConfig = {
   'browserstack.local' : 'true',
-  'browserstack.user' : 'sparkart',
-  'browserstack.key' : '***REMOVED***'
+  'browserstack.user' : '',
+  'browserstack.key' : '',
+  'project': 'Subscribe Email Widget'
 }
 
+//If browser_version is not specified, the latest version is used
 var setups = [
-      { browser: 'Chrome',  browser_version: '36.0', os: 'Windows', os_version: '8.1'},
-      { browser: 'Chrome',  browser_version: '35.0', os: 'Windows', os_version: '8.1'},
-      { browser: 'Safari',  browser_version: '7.0', os: 'OS X', os_version: 'Mavericks'},
-      { browser: 'Safari',  browser_version: '6.1', os: 'OS X', os_version: 'Mountain Lion'},
-      { browser: 'IE',  browser_version: '9.0', os: 'Windows', os_version: '7'},
-      { browser: 'IE',  browser_version: '10.0', os: 'Windows', os_version: '7'},
-      { browser: 'IE',  browser_version: '11.0', os: 'Windows', os_version: '8.1'},
-      { browser: 'Firefox',  browser_version: '31.0', os: 'Windows', os_version: '8.1' },
-      { browser: 'Firefox',  browser_version: '30.0', os: 'Windows', os_version: '8.1' },
-      { browserName: 'iPhone',  platform: 'MAC', device: 'iPhone 5S'},
-      { browserName: 'iPhone',  platform: 'MAC', device: 'iPhone 5'},
-      { browserName: 'android',  platform: 'ANDROID', device: 'LG Nexus 4'},
-      { browserName: 'android',  platform: 'ANDROID', device: 'Motorola Razr'}
+      { browser: 'Chrome'},
+      { browser: 'Chrome',  browser_version: '35.0'},
+      { browser: 'Safari'},
+      { browser: 'Safari',  browser_version: '6.1'},
+      { browser: 'IE'},
+      { browser: 'IE',  browser_version: '10.0'},
+      { browser: 'IE',  browser_version: '9.0'},
+      { browser: 'Firefox'},
+      { browser: 'Firefox',  browser_version: '30.0'},
+      { device: 'iPhone 5S'},
+      { device: 'iPhone 5'},
+      { device: 'LG Nexus 4'},
+      { device: 'Motorola Razr'}
    ];
 
 function setupDriver(capabilities) {
@@ -51,10 +53,9 @@ function testForm(driver, formId, submission, responseElement) {
 setups.forEach(function (setup) {
 
   var setupDescription;
-  if (setup.os) {
+  if (setup.browser) {
     setupDescription = ' in ' + setup.browser +
-    ' ' + setup.browser_version +
-    ' on ' + setup.os + ' ' + setup.os_version;
+    ' ' + (setup.browser_version || 'latest');
   } else if (setup.device) {
     setupDescription = ' on ' + setup.device;
   }
