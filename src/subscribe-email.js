@@ -29,11 +29,15 @@ function SubscribeEmail (options) {
   //Override Default Submit Action with CORS request
   theForm.addEventListener('submit', function(e) {
     e.preventDefault();
-    var requestData = instance.prepareData(this, options);
-    if (options.jsonp) {
-      instance.makeJSONPRequest(options.formAction, requestData);
+    if (serialize(this)) { //Only submit form if there is data
+      var requestData = instance.prepareData(this, options);
+      if (options.jsonp) {
+        instance.makeJSONPRequest(options.formAction, requestData);
+      } else {
+        instance.makeCorsRequest(options.formAction, requestData, theForm);
+      }
     } else {
-      instance.makeCorsRequest(options.formAction, requestData, theForm);
+      instance.emit('subscriptionError', 'Form is empty');
     }
   });
 
