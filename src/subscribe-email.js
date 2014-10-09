@@ -1,4 +1,4 @@
-var template = require('./template.hbs');
+var template = require('./subscribe-form.hbs');
 var serialize = require('form-serialize');
 var inherits = require('inherits');
 var EventEmitter = require('events').EventEmitter;
