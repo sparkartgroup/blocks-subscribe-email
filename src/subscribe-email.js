@@ -43,9 +43,7 @@ function SubscribeEmail (options) {
 
   //Listen for Message Events
   this.on('subscriptionMessage', function (message) {
-    if (!messageHolder) {
-      console.log(message);
-    } else {
+    if (messageHolder) {
       messageHolder.innerHTML = message;
     }
   });
