@@ -37,7 +37,7 @@ function SubscribeEmail (options) {
         instance.makeCorsRequest(options.formAction, requestData, theForm);
       }
     } else {
-      instance.emit('subscriptionError', 'Form is empty');
+      instance.emit('subscriptionError', 'An email address is required.');
     }
   });
 
