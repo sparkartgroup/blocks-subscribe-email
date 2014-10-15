@@ -2,9 +2,6 @@ Subscribe Email is a UMD JavaScript module for rendering a mailing list sign up 
 
 It allows developers to quickly include an email collection form on a page without being concerned with the implementation details of a specific mailing list platform. We're currently aiming to support mailing lists on SendGrid, MailChimp and Universe.
 
-[![browser support](https://ci.testling.com/blocks/subscribe-email.png)
-](https://ci.testling.com/blocks/subscribe-email)
-
 # Getting the Module
 You can get the module in any one of the following ways;
 - Download [the latest release](https://github.com/blocks/subscribe-email/releases) from GitHub
