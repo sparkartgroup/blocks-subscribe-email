@@ -53,6 +53,10 @@ function setDefaults(options) {
   options.overrideTemplate = options.overrideTemplate || false;
   options.submitText = options.submitText || 'Subscribe';
   options.responseElement = options.responseElement || '.subscribe-email__response';
+  if (typeof options.template === 'function') {
+    template = options.template;
+    delete options.template;
+  }
 
   switch (options.service) {
     case 'universe':
