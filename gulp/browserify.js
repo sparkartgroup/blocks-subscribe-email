@@ -5,9 +5,7 @@ var handleErrors = require('./util/handleErrors');
 var source       = require('vinyl-source-stream');
 var derequire    = require('gulp-derequire');
 
-var hbsfy = require('hbsfy').configure({
-  extensions: ['hbs']
-});
+var hbsfy = require('hbsfy');
 
 gulp.task('browserify', function() {
   var bundler = browserify({
