@@ -53,9 +53,6 @@ A string to be used on the form's submit button (defaults to "Subscribe").
 ### `template`
 Out of the box, the module will generate BEM markup with the namespace `subscribe-email` that contains all of the markup needed to display the alert. If you want to customize the markup, you can pass in a *compiled* handlebars template using this option. (Defaults to `false`).
 
-### `overrideTemplate`
-Setting this to true will override the `template` option, and the default template, and use the markup from the placeholder element instead. This gives you control over the markup without requiring the Handlebars runtime, but you'll have to make sure that your form contains all of the required fields.
-
 ### `responseElement`
 A selector string for the element you want to display response (validation, errors, confirmation) messages from your platform's API (defaults to `'.subscribe-email__response'`).
 

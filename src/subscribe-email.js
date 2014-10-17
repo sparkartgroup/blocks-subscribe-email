@@ -9,7 +9,8 @@ module.exports = SubscribeEmail;
 function SubscribeEmail (options) {
   if (!(this instanceof SubscribeEmail)) return new SubscribeEmail(options);
   var instance = this;
-  options = setDefaults(options);
+  options = setDefaults(options, instance);
+
   var theForm;
   if (options.element.jquery) {
     theForm = options.element[0];
@@ -17,12 +18,10 @@ function SubscribeEmail (options) {
     theForm = document.querySelector(options.element);
   }
 
-  if (!options.overrideTemplate) {
-    //Render the Default Template
-    theForm.innerHTML = template(options);
-    //Add BEM Namespace Class to Form
-    theForm.className += ' subscribe-email';
-  }
+  //Render the Default Template
+  theForm.innerHTML = instance.template(options);
+  //Add BEM Namespace Class to Form
+  theForm.className += ' subscribe-email';
 
   var messageHolder = theForm.querySelector(options.responseElement);
 
@@ -49,13 +48,15 @@ function SubscribeEmail (options) {
   });
 }
 
-function setDefaults(options) {
-  options.overrideTemplate = options.overrideTemplate || false;
+function setDefaults(options, instance) {
   options.submitText = options.submitText || 'Subscribe';
   options.responseElement = options.responseElement || '.subscribe-email__response';
+
   if (typeof options.template === 'function') {
-    template = options.template;
+    instance.template = options.template;
     delete options.template;
+  } else {
+    instance.template = template;
   }
 
   switch (options.service) {

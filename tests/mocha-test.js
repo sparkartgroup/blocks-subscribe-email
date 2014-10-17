@@ -41,7 +41,7 @@ function setupDriver(capabilities) {
 function testForm(driver, formId, submission, responseElement) {
   responseElement = responseElement || '.subscribe-email__response'
   driver.findElement(webdriver.By.css(formId + ' input[type="email"]')).sendKeys(submission);
-  driver.findElement(webdriver.By.css(formId + ' input[type="submit"]')).click();
+  driver.findElement(webdriver.By.css(formId + ' .subscribe-email__button')).click();
   driver.wait(function() {
     return driver.findElement(webdriver.By.css(formId + ' ' + responseElement)).getText().then(function(text) {
       return text;
@@ -69,7 +69,7 @@ setups.forEach(function (setup) {
     });
 
     test.it('universe form with test@test.com', function() {
-      var result = testForm(driver, '#universe-form', 'test@test.com', '.message');
+      var result = testForm(driver, '#universe-form', 'test@test.com');
       var expectedResult = new RegExp('Please check your email for confirmation','gi');
       return expectedResult.test(result);
     });

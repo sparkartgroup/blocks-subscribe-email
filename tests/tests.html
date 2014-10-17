@@ -4,6 +4,8 @@
     <title>Subscribe Email Demo</title>
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="../build/subscribe-email.js"></script>
+    <script src="handlebars.runtime.js"></script>
+    <script src="template.js"></script>
   </head>
   <body>
 
@@ -18,8 +20,7 @@
       var myForm = $('#universe-form');
       var universeForm = new SubscribeEmail({
         element: myForm,
-        overrideTemplate: true,
-        responseElement: '.message',
+        template: Handlebars.templates.customTemplate,
         service: 'universe',
         key: 'd54e8487-e44e-4c6f-bdd7-6ab9c2eae1e9'
       });
