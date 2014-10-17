@@ -38,12 +38,11 @@ function setupDriver(capabilities) {
   return driver;
 }
 
-function testForm(driver, formId, submission, responseElement) {
-  responseElement = responseElement || '.subscribe-email__response'
+function testForm(driver, formId, submission) {
   driver.findElement(webdriver.By.css(formId + ' input[type="email"]')).sendKeys(submission);
   driver.findElement(webdriver.By.css(formId + ' .subscribe-email__button')).click();
   driver.wait(function() {
-    return driver.findElement(webdriver.By.css(formId + ' ' + responseElement)).getText().then(function(text) {
+    return driver.findElement(webdriver.By.css(formId + ' .subscribe-email__response')).getText().then(function(text) {
       return text;
     });
   }, 2000);
