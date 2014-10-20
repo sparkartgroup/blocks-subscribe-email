@@ -17,7 +17,7 @@ gulp.task('browserify', function() {
     bundleLogger.start();
 
     return bundler
-      .transform(hbsfy)
+      .transform({global: true}, hbsfy)
       .bundle()
       .on('error', handleErrors)
       .pipe(source('subscribe-email.js'))

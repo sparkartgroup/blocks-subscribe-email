@@ -1,6 +1,7 @@
 var template = require('./subscribe-form.hbs');
 var serialize = require('form-serialize');
 var inherits = require('inherits');
+var Alerter = require('alerter');
 var EventEmitter = require('events').EventEmitter;
 
 inherits(SubscribeEmail, EventEmitter);
@@ -23,7 +24,9 @@ function SubscribeEmail (options) {
   //Add BEM Namespace Class to Form
   theForm.className += ' subscribe-email';
 
-  var messageHolder = theForm.querySelector(options.responseElement);
+  var messageHolder = new Alerter({
+    prependTo: options.prependMessagesTo
+  });
 
   //Override Default Submit Action with CORS request
   theForm.addEventListener('submit', function(e) {
@@ -42,15 +45,16 @@ function SubscribeEmail (options) {
 
   //Listen for Message Events
   this.on('subscriptionMessage', function (message) {
-    if (messageHolder) {
-      messageHolder.innerHTML = message;
-    }
+    messageHolder.create({
+      message: message,
+      dismissable: true
+    });
   });
 }
 
 function setDefaults(options, instance) {
   options.submitText = options.submitText || 'Subscribe';
-  options.responseElement = options.responseElement || '.subscribe-email__response';
+  options.prependMessagesTo = options.prependMessagesTo || options.element;
 
   if (typeof options.template === 'function') {
     instance.template = options.template;
@@ -61,7 +65,7 @@ function setDefaults(options, instance) {
 
   switch (options.service) {
     case 'universe':
-      options.formAction = options.formAction || 'http://services.sparkart.net/api/v1/contacts';
+      options.formAction = options.formAction || 'http://staging.services.sparkart.net/api/v1/contacts';
       options.emailName = options.emailName || 'contact[email]';
       options.jsonp = !('withCredentials' in new XMLHttpRequest());
       break;

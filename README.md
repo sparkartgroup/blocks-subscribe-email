@@ -41,6 +41,9 @@ The module can be configured with several optional parameters passed to it's con
 ### `element`
 **(Required)** A DOM element, jQuery element, or selector string to refer to the placeholder element.
 
+### `prependMessagesTo`
+A selector string that refers to the element that should receive response messages. Defaults to the same value set for `element`.
+
 ### `service`
 **(Required)** The mailing list platform you are using. Available options are `mailchimp`, `sendgrid` and `universe`.
 

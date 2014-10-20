@@ -40,12 +40,14 @@ function setupDriver(capabilities) {
 
 function testForm(driver, formId, submission) {
   driver.findElement(webdriver.By.css(formId + ' input[type="email"]')).sendKeys(submission);
-  driver.findElement(webdriver.By.css(formId + ' .subscribe-email__button')).click();
+  driver.findElement(webdriver.By.css(formId + ' .subscribe-email__button')).click().then(function() {
+    driver.sleep(800);
+  });
   driver.wait(function() {
-    return driver.findElement(webdriver.By.css(formId + ' .subscribe-email__response')).getText().then(function(text) {
+    return driver.findElement(webdriver.By.css(formId + ' .alert__message')).getText().then(function(text) {
       return text;
     });
-  }, 2000);
+  }, 1000);
 }
 
 
