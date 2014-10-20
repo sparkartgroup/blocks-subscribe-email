@@ -10,7 +10,7 @@ module.exports = SubscribeEmail;
 function SubscribeEmail (options) {
   if (!(this instanceof SubscribeEmail)) return new SubscribeEmail(options);
   var instance = this;
-  options = setDefaults(options, instance);
+  options = _setDefaults(options, instance);
 
   var theForm;
   if (options.element.jquery) {
@@ -32,11 +32,11 @@ function SubscribeEmail (options) {
   theForm.addEventListener('submit', function(e) {
     e.preventDefault();
     if (serialize(this)) { //Only submit form if there is data
-      var requestData = instance.prepareData(this, options);
+      var requestData = _prepareData(this, options);
       if (options.jsonp) {
-        instance.makeJSONPRequest(options.formAction, requestData);
+        _makeJSONPRequest(options.formAction, requestData, instance);
       } else {
-        instance.makeCorsRequest(options.formAction, requestData, theForm);
+        _makeCorsRequest(options.formAction, requestData, instance);
       }
     } else {
       instance.emit('subscriptionError', 'An email address is required.');
@@ -52,7 +52,8 @@ function SubscribeEmail (options) {
   });
 }
 
-function setDefaults(options, instance) {
+//Private Functions
+function _setDefaults(options, instance) {
   options.submitText = options.submitText || 'Subscribe';
   options.prependMessagesTo = options.prependMessagesTo || options.element;
 
@@ -86,7 +87,7 @@ function setDefaults(options, instance) {
   return options;
 }
 
-SubscribeEmail.prototype.prepareData = function(data, options) {
+function _prepareData(data, options) {
   var requestData = '';
   switch (options.service) {
     case 'universe':
@@ -106,11 +107,10 @@ SubscribeEmail.prototype.prepareData = function(data, options) {
       break;
   }
   return requestData;
-};
+}
 
-SubscribeEmail.prototype.makeCorsRequest = function (url, data, form) {
-  var instance = this;
-  var xhr = createCorsRequest('POST', url, data);
+function _makeCorsRequest(url, data, instance) {
+  var xhr = _createCorsRequest('POST', url, data);
   if (!xhr) { return; }
 
   xhr.onload = function() {
@@ -144,9 +144,9 @@ SubscribeEmail.prototype.makeCorsRequest = function (url, data, form) {
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
   }
   xhr.send(data);
-};
+}
 
-function createCorsRequest(method, url, data) {
+function _createCorsRequest(method, url, data) {
 
     var xhr;
     if ('withCredentials' in new XMLHttpRequest()) {
@@ -167,16 +167,8 @@ function createCorsRequest(method, url, data) {
     return xhr;
 }
 
-SubscribeEmail.prototype.getId = function() {
-  for (var id in window) {
-    if (window[id] === this) { return id; }
-  }
-  return 'SubscribeEmail';
-};
-
-SubscribeEmail.prototype.makeJSONPRequest = function (url, data) {
+function _makeJSONPRequest(url, data, instance) {
   var callbackName, scriptElement;
-  var instance = this;
 
   callbackName = "cb_" + Math.floor(Math.random() * 10000);
 
@@ -188,21 +180,20 @@ SubscribeEmail.prototype.makeJSONPRequest = function (url, data) {
         window[callbackName] = undefined;
     }
 
-    instance.processJSONP(json);
+    _processJSONP(json, instance);
   };
 
   scriptElement = document.createElement('script');
   scriptElement.src = url + data + callbackName;
   document.body.appendChild(scriptElement);
-};
+}
 
-SubscribeEmail.prototype.processJSONP = function(json) {
-  var instance = this;
+function _processJSONP(json, instance) {
   //Fire Message Event(s)
   if (json.message) {
-    this.emit('subscriptionMessage', json.message);
+    instance.emit('subscriptionMessage', json.message);
   } else if (json.msg) {
-    this.emit('subscriptionMessage', json.msg);
+    instance.emit('subscriptionMessage', json.msg);
   } else if (json.messages) {
     json.messages.forEach(function(message) {
       instance.emit('subscriptionMessage', message);
@@ -211,8 +202,8 @@ SubscribeEmail.prototype.processJSONP = function(json) {
 
   //Fire Success or Error Event
   if (json.result === 'success' || json.status === 'ok') {
-    this.emit('subscriptionSuccess', json);
+    instance.emit('subscriptionSuccess', json);
   } else {
-    this.emit('subscriptionError', json);
+    instance.emit('subscriptionError', json);
   }
-};
+}
