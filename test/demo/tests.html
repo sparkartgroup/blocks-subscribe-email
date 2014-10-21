@@ -3,7 +3,7 @@
   <head>
     <title>Subscribe Email Demo</title>
     <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script src="../build/subscribe-email.js"></script>
+    <script src="../../build/subscribe-email.js"></script>
     <script src="handlebars.runtime.js"></script>
     <script src="template.js"></script>
   </head>
@@ -26,13 +26,13 @@
       });
 
       universeForm.on('subscriptionMessage', function (payload) {
-          console.log("Message: ", payload);
+        console.log("Message: ", payload);
       });
       universeForm.on('subscriptionError', function (payload) {
-          console.log("Error:", payload);
+        console.log("Error:", payload);
       });
       universeForm.on('subscriptionSuccess', function (payload) {
-          console.log("Success:", payload);
+        console.log("Success:", payload);
       });
     </script>
 
@@ -47,7 +47,7 @@
       });
 
       sendGridForm.on('subscriptionMessage', function (payload) {
-          console.log("SendGrid Message: ", payload);
+        console.log("SendGrid Message: ", payload);
       });
     </script>
 
