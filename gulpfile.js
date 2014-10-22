@@ -10,19 +10,19 @@ var BrowserStackTunnel = require('browserstacktunnel-wrapper');
 var mocha = require('gulp-spawn-mocha');
 
 function handleError(err) {
-  console.log(err.toString());
+  console.log(err.message);
   this.emit('end');
 }
 
 // Task groups
 gulp.task('default', ['build', 'start-server']);
 
-gulp.task('test', function(callback) {
+gulp.task('test', function(cb) {
   runSequence(
-    ['default', 'build-tests'],
-    'start-browserstack-tunnel',
+    ['build', 'build-tests', 'start-server', 'start-browserstack-tunnel'],
     'run-selenium',
-    callback
+    ['stop-test-server', 'stop-browserstack-tunnel'],
+    cb
   );
 });
 
@@ -57,16 +57,22 @@ gulp.task('build-tests', function() {
   return bundle();
 });
 
+var devServer;
 gulp.task('start-server', function(cb) {
-  http.createServer(
+  devServer = http.createServer(
     ecstatic({ root: './' })
   ).listen(8080);
   console.log('Listening on :8080');
   cb();
 });
 
+gulp.task('stop-test-server', function(cb) {
+  devServer.close(cb);
+});
+
+var browserStackTunnel;
 gulp.task('start-browserstack-tunnel', function(cb) {
-  var browserStackTunnel = new BrowserStackTunnel({
+  browserStackTunnel = new BrowserStackTunnel({
     key: '',
     hosts: [{
       name: 'localhost',
@@ -83,6 +89,10 @@ gulp.task('start-browserstack-tunnel', function(cb) {
       cb();
     }
   });
+});
+
+gulp.task('stop-browserstack-tunnel', function(cb) {
+  browserStackTunnel.stop(cb);
 });
 
 gulp.task('run-selenium', function () {

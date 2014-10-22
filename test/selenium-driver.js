@@ -62,7 +62,7 @@ setups.forEach(function (setup) {
   var capabilities = objectMerge(browserStackConfig, setup);
   var driver = setupDriver(capabilities);
 
-  test.describe('Mocha tests' + setupDescription, function() {
+  test.describe('Mocha tests should pass' + setupDescription, function() {
 
     test.before(function() {
       driver.get('http://localhost:8080/test/mocha/test.html');

@@ -1,23 +1,34 @@
 var assert = require('assert');
 var SubscribeEmail = require('../build/subscribe-email.js');
 
-describe('Subscribe Email', function() {
-  describe('SubscribeEmail()', function() {
-    it('works', function(done) {
-      var sendGridForm = SubscribeEmail({
-        element: '#sendgrid-form',
-        service: 'sendgrid',
-        key: 'SDA+fsU1Qw6S6JIXfgrPngHjsFrn2z8v7VWCgt+a0ln11bNnVF1tvSwDWEK/pRiO'
-      });
+describe('Subscribe Email Module', function() {
 
-      assert.deepEqual(true, true);
-      done();
-    });
+  var sendGridForm = SubscribeEmail({
+    element: '#sendgrid-form',
+    service: 'sendgrid',
+    key: ''
+  });
 
-    it('fails', function(done) {
-      assert.deepEqual(true, false);
-      done();
-    });
+  it('is an EventEmitter', function(done){
+    assert(sendGridForm.emit);
+    assert(sendGridForm._events);
+    done();
+  });
+
+  describe('element parameter', function() {
+
+    it('accepts a DOM selector string');
+
+    it('accepts a jQuery element');
+
+  });
+
+  describe('template parameter', function() {
+
+    it('accepts a precompiled handlebars template');
+
+    it('overrides the default template');
+
   });
 
 });
