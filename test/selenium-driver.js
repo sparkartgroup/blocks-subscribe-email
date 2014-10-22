@@ -59,12 +59,11 @@ setups.forEach(function (setup) {
     setupDescription = ' on ' + setup.device;
   }
 
-  var capabilities = objectMerge(browserStackConfig, setup);
-  var driver = setupDriver(capabilities);
-
   test.describe('Mocha tests should pass' + setupDescription, function() {
 
     test.before(function() {
+      var capabilities = objectMerge(browserStackConfig, setup);
+      var driver = setupDriver(capabilities);
       driver.get('http://localhost:8080/test/mocha/test.html');
     });
 
@@ -93,25 +92,25 @@ setups.forEach(function (setup) {
     });
   });
 
-  test.describe('Forms work' + setupDescription, function() {
+  test.describe('Forms should work' + setupDescription, function() {
 
     test.before(function() {
       driver.get('http://localhost:8080/test/demo/tests.html');
     });
 
-    test.it('universe form with test@test.com', function() {
+    test.it('universe form works with test@test.com', function() {
       var result = testForm(driver, '#universe-form', 'test@test.com');
       var expectedResult = new RegExp('Please check your email for confirmation','gi');
       return expectedResult.test(result);
     });
 
-    test.it('sendgrid form with test@test.com', function() {
+    test.it('sendgrid form works with test@test.com', function() {
       var result = testForm(driver, '#sendgrid-form', 'test@test.com');
       var expectedResult = new RegExp('You have subscribed','gi');
       return expectedResult.test(result);
     });
 
-    test.it('mailchimp form with test@test.com', function() {
+    test.it('mailchimp form works with test@test.com', function() {
       var result = testForm(driver, '#mailchimp-form', 'test@test.com');
       var expectedResult = new RegExp('0 - This email address looks fake','gi');
       return expectedResult.test(result);

@@ -2,37 +2,18 @@
 <html>
   <head>
     <title>Subscribe Email Demo</title>
-    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="../../build/subscribe-email.js"></script>
-    <script src="handlebars.runtime.js"></script>
-    <script src="template.js"></script>
   </head>
   <body>
 
     <p>Here's a Universe subscribe form!</p>
-    <form id="universe-form">
-      <input type="email" required name="contact[email]">
-      <input type="submit" value="Subscribe">
-      <p class="message"></p>
-    </form>
+    <form id="universe-form"></form>
 
     <script>
-      var myForm = $('#universe-form');
       var universeForm = new SubscribeEmail({
-        element: myForm,
-        template: Handlebars.templates.customTemplate,
+        element: '#universe-form',
         service: 'universe',
         key: 'd54e8487-e44e-4c6f-bdd7-6ab9c2eae1e9'
-      });
-
-      universeForm.on('subscriptionMessage', function (payload) {
-        console.log("Message: ", payload);
-      });
-      universeForm.on('subscriptionError', function (payload) {
-        console.log("Error:", payload);
-      });
-      universeForm.on('subscriptionSuccess', function (payload) {
-        console.log("Success:", payload);
       });
     </script>
 
@@ -44,10 +25,6 @@
         element: '#sendgrid-form',
         service: 'sendgrid',
         key: 'SDA+fsU1Qw6S6JIXfgrPngHjsFrn2z8v7VWCgt+a0ln11bNnVF1tvSwDWEK/pRiO'
-      });
-
-      sendGridForm.on('subscriptionMessage', function (payload) {
-        console.log("SendGrid Message: ", payload);
       });
     </script>
 

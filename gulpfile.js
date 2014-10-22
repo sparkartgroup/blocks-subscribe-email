@@ -15,7 +15,7 @@ function handleError(err) {
 }
 
 // Task groups
-gulp.task('default', ['build', 'start-server']);
+gulp.task('default', ['build', 'build-tests', 'start-server']);
 
 gulp.task('test', function(cb) {
   runSequence(
