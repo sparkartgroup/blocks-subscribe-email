@@ -3,6 +3,7 @@
   <head>
     <title>Subscribe Email Demo</title>
     <script src="../../build/subscribe-email.js"></script>
+    <script src="sinon.js"></script>
   </head>
   <body>
 
@@ -37,6 +38,72 @@
         service: 'mailchimp',
         url: 'http://josiahsprague.us5.list-manage.com/subscribe/post?u=e91ffb6b8d4681eafd86fd883&id=596075069d'
       });
+    </script>
+
+    <script>
+
+    var server;
+    function setupFakeServer() {
+      server = sinon.fakeServer.create();
+      server.autoRespond = true;
+
+      var fakeAPIs = [
+        {
+          route: 'http://staging.services.sparkart.net/api/v1/contacts',
+          required: ['key', 'contact[email]'],
+          success: '{"status":"ok", "messages":["Success!"]}',
+          fail: '{"status":"error", "messages":["Fail!"]}'
+        },
+        {
+          route: 'http://sendgrid.com/newsletter/addRecipientFromWidget',
+          required: ['p','r','SG_widget[email]'],
+          success: '{"success":true, "message":"Success!"}',
+          fail: '{"success":false, "message":"Fail!"}'
+        }
+      ];
+
+      fakeAPIs.forEach(function(api){
+        server.respondWith(api.route, function(r){
+          var query = queryStringToObject(r.requestBody);
+          var response;
+          var isValid = true;
+          api.required.forEach(function(param){
+            if (!query[param]) {
+              isValid = false;
+            }
+          });
+          if (isValid) {
+            response = api.success;
+          } else {
+            response = api.fail
+          }
+          console.log(response);
+          r.respond(
+            200,
+            {"Content-Type":"application/json"},
+            response
+          );
+        });
+      });
+
+    }
+
+    function queryStringToObject(query) {
+      var queryObject = {};
+      query.replace(
+        new RegExp("([^?=&]+)(=([^&]*))?", "g"),
+        function($0, $1, $2, $3) {
+          queryObject[decodeURIComponent($1)] = decodeURIComponent($3);
+        });
+      return queryObject;
+    }
+
+    function destroyFakeServer() {
+      server.restore();
+    }
+
+    window.onload = setupFakeServer();
+
     </script>
 
   </body>
