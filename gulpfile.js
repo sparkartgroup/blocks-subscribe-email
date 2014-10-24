@@ -26,6 +26,8 @@ gulp.task('test', function(cb) {
   );
 });
 
+gulp.task('manual-test', ['default', 'start-browserstack-tunnel'])
+
 gulp.task('build', function() {
   var bundler = browserify({
     entries: ['./src/subscribe-email.js'],

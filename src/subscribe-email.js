@@ -34,7 +34,7 @@ function SubscribeEmail (options) {
     if (serialize(this)) { //Only submit form if there is data
       var requestData = _prepareData(this, options);
       if (options.jsonp) {
-        _makeJSONPRequest(options.formAction, requestData, instance);
+        instance.makeJSONPRequest(options.formAction, requestData, instance);
       } else {
         _makeCorsRequest(options.formAction, requestData, instance);
       }
@@ -52,6 +52,42 @@ function SubscribeEmail (options) {
   });
 }
 
+SubscribeEmail.prototype.makeJSONPRequest = function(url, data, instance) {
+  var callbackName, scriptElement;
+  callbackName = "cb_" + Math.floor(Math.random() * 10000);
+  window[callbackName] = function(json) {
+    try {
+      delete window[callbackName];
+    } catch (e) {
+      window[callbackName] = undefined;
+    }
+    instance.processJSONP(json, instance);
+  };
+  scriptElement = document.createElement('script');
+  scriptElement.src = url + data + callbackName;
+  document.body.appendChild(scriptElement);
+}
+
+SubscribeEmail.prototype.processJSONP = function(json, instance) {
+  //Fire Message Event(s)
+  if (json.message) {
+    instance.emit('subscriptionMessage', json.message);
+  } else if (json.msg) {
+    instance.emit('subscriptionMessage', json.msg);
+  } else if (json.messages) {
+    json.messages.forEach(function(message) {
+      instance.emit('subscriptionMessage', message);
+    });
+  }
+
+  //Fire Success or Error Event
+  if (json.result === 'success' || json.status === 'ok') {
+    instance.emit('subscriptionSuccess', json);
+  } else {
+    instance.emit('subscriptionError', json);
+  }
+}
+
 //Private Functions
 function _setDefaults(options, instance) {
   options.submitText = options.submitText || 'Subscribe';
@@ -66,7 +102,7 @@ function _setDefaults(options, instance) {
 
   switch (options.service) {
     case 'universe':
-      options.formAction = options.formAction || 'http://staging.services.sparkart.net/api/v1/contacts';
+      options.formAction = options.formAction || 'http://services.sparkart.net/api/v1/contacts';
       options.emailName = options.emailName || 'contact[email]';
       options.jsonp = !('withCredentials' in new XMLHttpRequest());
       break;
@@ -165,45 +201,4 @@ function _createCorsRequest(method, url, data) {
       xhr = null;
     }
     return xhr;
-}
-
-function _makeJSONPRequest(url, data, instance) {
-  var callbackName, scriptElement;
-
-  callbackName = "cb_" + Math.floor(Math.random() * 10000);
-
-  window[callbackName] = function(json) {
-    try {
-        delete window[callbackName];
-    }
-    catch (e) {
-        window[callbackName] = undefined;
-    }
-
-    _processJSONP(json, instance);
-  };
-
-  scriptElement = document.createElement('script');
-  scriptElement.src = url + data + callbackName;
-  document.body.appendChild(scriptElement);
-}
-
-function _processJSONP(json, instance) {
-  //Fire Message Event(s)
-  if (json.message) {
-    instance.emit('subscriptionMessage', json.message);
-  } else if (json.msg) {
-    instance.emit('subscriptionMessage', json.msg);
-  } else if (json.messages) {
-    json.messages.forEach(function(message) {
-      instance.emit('subscriptionMessage', message);
-    });
-  }
-
-  //Fire Success or Error Event
-  if (json.result === 'success' || json.status === 'ok') {
-    instance.emit('subscriptionSuccess', json);
-  } else {
-    instance.emit('subscriptionError', json);
-  }
 }

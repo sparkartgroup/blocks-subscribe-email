@@ -36,14 +36,22 @@ function setupDriver(capabilities) {
   return driver;
 }
 
-function testForm(driver, formId, submission) {
-  driver.findElement(webdriver.By.css(formId + ' input[type="email"]')).sendKeys(submission);
-  driver.findElement(webdriver.By.css(formId + ' .subscribe-email__button')).click().then(function() {
-    driver.sleep(1000);
-  });
+function testForm(driver, formId, success) {
+  driver.findElement(webdriver.By.css(formId + ' input[type="email"]')).clear();
+  if (success) {
+    driver.findElement(webdriver.By.css(formId + ' input[type="email"]')).sendKeys('test@test.com');
+  } else {
+    driver.findElement(webdriver.By.css(formId + ' input[type="email"]')).sendKeys('fail@test.com');
+  }
+  driver.findElement(webdriver.By.css(formId + ' .subscribe-email__button')).click();
   driver.wait(function() {
     return driver.findElement(webdriver.By.css(formId + ' .alert__message')).getText().then(function(text) {
-      return text;
+      driver.findElement(webdriver.By.css(formId + ' .alert .alert__close-button')).click();
+      if (success) {
+        return text = 'Success!';
+      } else {
+        return text = 'Fail!';
+      }
     });
   }, 1000);
 }
@@ -98,22 +106,28 @@ setups.forEach(function (setup) {
       driver.get('http://localhost:8080/test/demo/tests.html');
     });
 
-    test.it('universe form works with test@test.com', function() {
-      var result = testForm(driver, '#universe-form', 'test@test.com');
-      var expectedResult = new RegExp('Please check your email for confirmation','gi');
-      return expectedResult.test(result);
+    test.it('universe form success', function() {
+      var result = testForm(driver, '#universe-form', true);
     });
 
-    test.it('sendgrid form works with test@test.com', function() {
-      var result = testForm(driver, '#sendgrid-form', 'test@test.com');
-      var expectedResult = new RegExp('You have subscribed','gi');
-      return expectedResult.test(result);
+    test.it('universe form fail', function() {
+      var result = testForm(driver, '#universe-form', false);
     });
 
-    test.it('mailchimp form works with test@test.com', function() {
-      var result = testForm(driver, '#mailchimp-form', 'test@test.com');
-      var expectedResult = new RegExp('0 - This email address looks fake','gi');
-      return expectedResult.test(result);
+    test.it('sendgrid form success', function() {
+      var result = testForm(driver, '#sendgrid-form', true);
+    });
+
+    test.it('sendgrid form fail', function() {
+      var result = testForm(driver, '#sendgrid-form', false);
+    });
+
+    test.it('mailchimp form success', function() {
+      var result = testForm(driver, '#mailchimp-form', true);
+    });
+
+    test.it('mailchimp form fail', function() {
+      var result = testForm(driver, '#mailchimp-form', false);
     });
 
     test.after(function() { driver.quit(); });
