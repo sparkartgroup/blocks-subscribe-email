@@ -146,7 +146,7 @@ function _prepareData(data, options) {
 }
 
 function _makeCorsRequest(url, data, instance) {
-  var xhr = _createCorsRequest('POST', url, data);
+  var xhr = _createCorsRequest('POST', url);
   if (!xhr) { return; }
 
   xhr.onload = function() {
@@ -182,7 +182,7 @@ function _makeCorsRequest(url, data, instance) {
   xhr.send(data);
 }
 
-function _createCorsRequest(method, url, data) {
+function _createCorsRequest(method, url) {
 
     var xhr;
     if ('withCredentials' in new XMLHttpRequest()) {
@@ -196,7 +196,7 @@ function _createCorsRequest(method, url, data) {
       xhr.onerror = function (){};
       xhr.ontimeout = function(){};
       xhr.onprogress = function(){};
-      xhr.open('POST', url + '?' + data);
+      xhr.open('POST', url);
     } else {
       xhr = null;
     }
