@@ -23,7 +23,7 @@ var setups = [
   {browser: 'Firefox'},
   {browser: 'Firefox', browser_version: '30.0'},
   {device: 'iPhone 5S'},
-  {device: 'iPhone 5'},
+  {device: 'iPhone 6'},
   {device: 'LG Nexus 4'},
   {device: 'Motorola Razr'}
 ];
