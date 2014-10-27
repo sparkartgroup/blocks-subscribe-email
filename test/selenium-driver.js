@@ -81,7 +81,7 @@ setups.forEach(function (setup) {
           if (!finished) return false;
 
           return driver.executeScript('return mocha_stats;').then(function(stats) {
-            console.log('    Passes: ' + stats.passes + ', Failures: ' + stats.failures + ', Duration: ' + (stats.duration / 1000).toFixed(2) + 's');
+            //console.log('    Passes: ' + stats.passes + ', Failures: ' + stats.failures + ', Duration: ' + (stats.duration / 1000).toFixed(2) + 's');
             assert(stats.tests > 0, 'No mocha tests were run');
             assert(stats.failures <= 0, 'Some mocha tests failed');
             if (!stats.failures) return true;
@@ -89,8 +89,8 @@ setups.forEach(function (setup) {
             return driver.executeScript('return mocha_failures;').then(function(failures) {
               for (var i = 0; i < failures.length; ++i) {
                 var prefix = '    ' + (i + 1) + '. ';
-                console.log(prefix + failures[i][0]);
-                console.log(Array(prefix.length + 1).join(' ') + failures[i][1]);
+                //console.log(prefix + failures[i][0]);
+                //console.log(Array(prefix.length + 1).join(' ') + failures[i][1]);
               }
               return true;
             });

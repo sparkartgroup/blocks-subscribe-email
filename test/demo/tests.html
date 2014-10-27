@@ -78,7 +78,6 @@
         api.required.push(api.email);
         server.respondWith(api.route, function(r){
           var query = queryStringToObject(r.requestBody);
-          console.log(query);
           var response;
           var isValid = true;
           api.required.forEach(function(param){
@@ -91,7 +90,6 @@
           } else {
             response = api.fail
           }
-          console.log(response);
           r.respond(
             200,
             {"Content-Type":"application/json"},
