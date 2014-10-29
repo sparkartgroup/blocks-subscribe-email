@@ -30,10 +30,6 @@ describe('Subscribe Email Module', function() {
       done();
     });
 
-    it('fires a subscriptionSuccess event on success');
-    it('fires a subscriptionError event on fail');
-    it('fires a subscriptionMessage event on both subscribe and fail');
-
   });
 
   describe('element parameter', function() {

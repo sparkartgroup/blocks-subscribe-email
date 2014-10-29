@@ -23,7 +23,7 @@
     <form id="sendgrid-form"></form>
 
     <script>
-      var sendGridForm = SubscribeEmail({
+      var sendgridForm = SubscribeEmail({
         element: '#sendgrid-form',
         service: 'sendgrid',
         key: 'SDA+fsU1Qw6S6JIXfgrPngHjsFrn2z8v7VWCgt+a0ln11bNnVF1tvSwDWEK/pRiO'
@@ -69,6 +69,22 @@
         fail: '{"result": "error", "msg": "Fail!"}'
       }
     ];
+    var eventSpy;
+    function setupSinonSpies(obj) {
+      eventSpy = sinon.spy(obj, 'emit');
+    }
+
+    function resetSinonSpies() {
+      eventSpy.reset();
+    }
+
+    function checkEventStatus() {
+      var eventStatus = {};
+      eventStatus.fail = eventSpy.calledWith('subscriptionError');
+      eventStatus.success = eventSpy.calledWith('subscriptionSuccess');
+      eventStatus.message = eventSpy.calledWith('subscriptionMessage');
+      return eventStatus;
+    }
 
     function setupFakeServer() {
       server = sinon.fakeServer.create();
@@ -99,7 +115,7 @@
       });
 
       var mailchimpStub = sinon.stub(mailchimpForm, 'makeJSONPRequest', mockJSONPResponse);
-      var sendgridStub = sinon.stub(sendGridForm, 'makeJSONPRequest', mockJSONPResponse);
+      var sendgridStub = sinon.stub(sendgridForm, 'makeJSONPRequest', mockJSONPResponse);
       var universeStub = sinon.stub(universeForm, 'makeJSONPRequest', mockJSONPResponse);
     }
 
