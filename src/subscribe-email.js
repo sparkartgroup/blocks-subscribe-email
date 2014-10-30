@@ -10,26 +10,25 @@ module.exports = SubscribeEmail;
 function SubscribeEmail (options) {
   if (!(this instanceof SubscribeEmail)) return new SubscribeEmail(options);
   var instance = this;
-  options = _setDefaults(options, instance);
 
-  var theForm;
   if (options.element.jquery) {
-    theForm = options.element[0];
+    instance.theForm = options.element[0];
   } else {
-    theForm = document.querySelector(options.element);
+    instance.theForm = document.querySelector(options.element);
   }
 
+  options = _setDefaults(options, instance);
   //Render the Default Template
-  theForm.innerHTML = instance.template(options);
-  //Add BEM Namespace Class to Form
-  theForm.className += ' subscribe-email';
+  instance.theForm.outerHTML = instance.template(options);
+  //Select new DOM element after replacing original with rendered template
+  instance.theForm = document.getElementById(options.id);
 
   var messageHolder = new Alerter({
     prependTo: options.prependMessagesTo
   });
 
   //Override Default Submit Action with CORS request
-  theForm.addEventListener('submit', function(e) {
+  instance.theForm.addEventListener('submit', function(e) {
     e.preventDefault();
     if (serialize(this)) { //Only submit form if there is data
       var requestData = _prepareData(this, options);
@@ -90,8 +89,11 @@ SubscribeEmail.prototype.processJSONP = function(json, instance) {
 
 //Private Functions
 function _setDefaults(options, instance) {
+  options.namespace = options.namespace || 'subscribe-email';
   options.submitText = options.submitText || 'Subscribe';
   options.prependMessagesTo = options.prependMessagesTo || options.element;
+  //get/set the ID of the HTML element (may be different than the value of element)
+  options.id = instance.theForm.id || ('subscribe-email-' + options.service);
 
   if (typeof options.template === 'function') {
     instance.template = options.template;

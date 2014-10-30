@@ -52,7 +52,10 @@ A selector string that refers to the element that should receive response messag
 A string to be used on the form's submit button (defaults to "Subscribe").
 
 ### `template`
-Out of the box, the module will generate BEM markup with the namespace `subscribe-email` that contains all of the markup needed to display the alert. If you want to customize the markup, you can pass in a *compiled* handlebars template using this option. (Defaults to `false`).
+If you want to customize the markup, you can override the default markup by passing in a *compiled* handlebars template using this option. See the default template for a starting point to work from. A custom template will not work without a form tag that contains `id="{{id}}"` and an email input that contains `name="{{emailName}}"`. (Defaults to `false`).
+
+### `namespace`
+Out of the box, the module will generate BEM markup with the namespace `subscribe-email`, but you can use this option to override the default without passing in a custom template.
 
 ### `prependMessagesTo`
 By default, responses from the different mailing list platforms will be prepended to the SubscribeEmail `element` as a dismissable alert, but you can use this option to override which element the alerts are prepended to. Accepts a query string or a jQuery object.

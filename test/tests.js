@@ -65,7 +65,7 @@ describe('Subscribe Email Module', function() {
         service: 'universe',
         template: testTemplate
       });
-      var testElement = $('#test-element .custom-template');
+      var testElement = $('#test-element');
       assert(testElement.length > 0);
       done();
     });
