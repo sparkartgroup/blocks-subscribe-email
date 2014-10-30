@@ -63,7 +63,7 @@ setups.forEach(function (setup) {
 
           return driver.executeScript('return mocha_stats;').then(function(stats) {
             assert(stats.tests > 0, 'No mocha tests were run');
-            assert(stats.failures <= 0, 'Some mocha tests failed, run locally for details');
+            assert(stats.failures <= 0, 'Tests failed, run manually' + setupDescription + ' for details');
             if (!stats.failures) return true;
 
             return driver.executeScript('return mocha_failures;').then(function(failures) {
