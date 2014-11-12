@@ -46,7 +46,7 @@
     var server;
     var fakeAPIs = [
       {
-        route: 'http://services.sparkart.net/api/v1/contacts',
+        route: 'https://services.sparkart.net/api/v1/contacts',
         email: 'contact[email]',
         required: ['key'],
         callback: 'callback',
@@ -54,7 +54,7 @@
         fail: '{"status":"error", "messages":["Fail!"]}'
       },
       {
-        route: 'http://sendgrid.com/newsletter/addRecipientFromWidget',
+        route: 'https://sendgrid.com/newsletter/addRecipientFromWidget',
         email: 'SG_widget[email]',
         required: ['p','r'],
         success: '{"success":true, "message":"Success!"}',

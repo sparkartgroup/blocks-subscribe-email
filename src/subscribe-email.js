@@ -103,12 +103,12 @@ function _setDefaults(options, instance) {
 
   switch (options.service) {
     case 'universe':
-      options.formAction = options.formAction || 'http://services.sparkart.net/api/v1/contacts';
+      options.formAction = options.formAction || 'https://services.sparkart.net/api/v1/contacts';
       options.emailName = options.emailName || 'contact[email]';
       options.jsonp = !('withCredentials' in new XMLHttpRequest());
       break;
     case 'sendgrid':
-      options.formAction =  options.formAction || 'http://sendgrid.com/newsletter/addRecipientFromWidget';
+      options.formAction =  options.formAction || 'https://sendgrid.com/newsletter/addRecipientFromWidget';
       options.emailName = options.emailName || 'SG_widget[email]';
       options.jsonp = false;
       break;
