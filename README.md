@@ -8,21 +8,23 @@ You can get the module in any one of the following ways;
 - Or install with npm; `npm install subscribe-email`
 - Or install with Bower; `bower install subscribe-email`
 
-# Quick Start
-To get started, you'll need to include the script on your page, create a `<form>` element, and initialize the module. After you include subscribe-email.js in your project, here's some minimal code you can use to get started quickly;
+# Example Usage
+To get started, you'll need to include the script on your page, create a placeholder element, and initialize the module. After you include subscribe-email.js in your project, here's some minimal code you can use to get started quickly;
 
 ```
-<form id="subscribe-form"></form>
+<div id="subscribe-form"></div>
 ```
 
 
 ```
 <script>
-new SubscribeEmail({
-  element: '#subscribe-form',
-  service: 'universe',
-  key: 'your-api-key-here'
-});
+window.onload = function() {
+  var mySubscribeForm = new SubscribeEmail({
+    element: '#subscribe-form',
+    service: 'universe',
+    key: 'your-api-key-here'
+  });
+};
 </script>
 ```
 
@@ -37,7 +39,7 @@ The module can be configured with several optional parameters passed to it's con
 **(Required)** A DOM element, jQuery element, or selector string to refer to the placeholder element.
 
 ### `prependMessagesTo`
-A selector string that refers to the element that should receive response messages. Defaults to the same value set for `element`.
+By default, responses from the different mailing list platforms will be prepended to the SubscribeEmail `element` as a dismissable alert, but you can use this option to override which element the alerts are prepended to. Accepts a query string or a jQuery object.
 
 ### `service`
 **(Required)** The mailing list platform you are using. Available options are `mailchimp`, `sendgrid` and `universe`.
@@ -57,17 +59,22 @@ If you want to customize the markup, you can override the default markup by pass
 ### `namespace`
 Out of the box, the module will generate BEM markup with the namespace `subscribe-email`, but you can use this option to override the default without passing in a custom template.
 
-### `prependMessagesTo`
-By default, responses from the different mailing list platforms will be prepended to the SubscribeEmail `element` as a dismissable alert, but you can use this option to override which element the alerts are prepended to. Accepts a query string or a jQuery object.
-
 ## Events
-You can easily integrate the messages into other parts of your page by listening for the following events to be emitted from the SubscribeEmail instance;
+You can easily integrate the messages into other parts of your page by listening for events being emitted from the SubscribeEmail instance;
+
+```
+mySubscribeForm.on('subscriptionMessage', function(payload){
+  console.log(payload);
+});
+```
+
+You can listen for the following events;
 
 ### `subscriptionMessage`
 Fires whenever the mailing list provider returns a response (both success and failure). The message will be passed to this event as a string.
 
 ### `subscriptionError`
-This event will fire if the mailing list provider returns an error. Specific details about the error will be passed to the event as a payload object.
+This event will fire if the mailing list provider returns an error. Specific details about the error will be passed to the event as a payload object. Note: the payload object may vary depending on the service.
 
 ### `subscriptionSuccess`
-This event will fire if the mailing list provider returns a confirmation that the email address has been added to the list. Specific details will be passed to the event as a payload object.
+This event will fire if the mailing list provider returns a confirmation that the email address has been added to the list. Specific details will be passed to the event as a payload object. Note: the payload object may vary depending on the service.

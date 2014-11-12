@@ -35,7 +35,7 @@ gulp.task('build', function() {
   });
   var bundle = function() {
     return bundler
-      .transform({global: true}, hbsfy)
+      .transform(hbsfy)
       .bundle()
       .pipe(source('subscribe-email.js'))
       .pipe(derequire())

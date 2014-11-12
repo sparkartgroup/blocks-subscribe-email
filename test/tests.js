@@ -17,16 +17,14 @@ describe('Subscribe Email Module', function() {
     document.body.appendChild(testElement);
   });
 
-  describe('Events', function() {
+  describe('Initialization', function() {
 
-    it('Emits events', function(done){
+    it('Has an emit method', function(done){
       var subscribeInstance = SubscribeEmail({
         element: '#test-element',
         service: 'universe'
       });
-      var spy = sinon.spy(subscribeInstance, 'emit');
-      subscribeInstance.emit('subscriptionMessage', 'Test Message');
-      assert(spy.called);
+      assert(typeof subscribeInstance.emit === 'function');
       done();
     });
 
@@ -65,7 +63,7 @@ describe('Subscribe Email Module', function() {
         service: 'universe',
         template: testTemplate
       });
-      var testElement = $('#test-element');
+      var testElement = $('#test-element.custom-template');
       assert(testElement.length > 0);
       done();
     });
