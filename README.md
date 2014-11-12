@@ -37,7 +37,7 @@ The module can be configured with several optional parameters passed to it's con
 **(Required)** A DOM element, jQuery element, or selector string to refer to the placeholder element.
 
 ### `prependMessagesTo`
-A selector string that refers to the element that should receive response messages. Defaults to the same value set for `element`.
+By default, responses from the different mailing list platforms will be prepended to the SubscribeEmail `element` as a dismissable alert, but you can use this option to override which element the alerts are prepended to. Accepts a query string or a jQuery object.
 
 ### `service`
 **(Required)** The mailing list platform you are using. Available options are `mailchimp`, `sendgrid` and `universe`.
@@ -56,9 +56,6 @@ If you want to customize the markup, you can override the default markup by pass
 
 ### `namespace`
 Out of the box, the module will generate BEM markup with the namespace `subscribe-email`, but you can use this option to override the default without passing in a custom template.
-
-### `prependMessagesTo`
-By default, responses from the different mailing list platforms will be prepended to the SubscribeEmail `element` as a dismissable alert, but you can use this option to override which element the alerts are prepended to. Accepts a query string or a jQuery object.
 
 ## Events
 You can easily integrate the messages into other parts of your page by listening for the following events to be emitted from the SubscribeEmail instance;

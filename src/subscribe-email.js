@@ -1,7 +1,7 @@
 var template = require('./subscribe-form.hbs');
 var serialize = require('form-serialize');
 var inherits = require('inherits');
-var Alerter = require('alerter');
+var Alerter = require('blocks-alerter');
 var EventEmitter = require('events').EventEmitter;
 
 inherits(SubscribeEmail, EventEmitter);
@@ -97,7 +97,6 @@ function _setDefaults(options, instance) {
 
   if (typeof options.template === 'function') {
     instance.template = options.template;
-    delete options.template;
   } else {
     instance.template = template;
   }

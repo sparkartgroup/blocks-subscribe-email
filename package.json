@@ -1,5 +1,5 @@
 {
-  "name": "subscribe-email",
+  "name": "blocks-subscribe",
   "version": "1.0.0",
   "description": "Subscribes an email address to a list. Supports a selection of email marketing services.",
   "keywords": [
@@ -37,7 +37,7 @@
     "vinyl-source-stream": "^0.1.1"
   },
   "dependencies": {
-    "alerter": "git://github.com/blocks/alerts#c5fe1dc",
+    "blocks-alerter": "^1.0.2",
     "form-serialize": "^0.3.0",
     "inherits": "^2.0.1"
   }
