@@ -1,0 +1,25 @@
+{
+  "name": "blocks-subscribe-email",
+  "homepage": "https://github.com/blocks/subscribe-email",
+  "authors": [
+    "Josiah Sprague <josiah.sprague@gmail.com>"
+  ],
+  "description": "Subscribes an email address to a list. Supports a selection of email marketing services.",
+  "main": "build/subscribe-email.js",
+  "keywords": [
+    "email",
+    "subscription",
+    "blocks",
+    "browser",
+    "browserify",
+    "mailchimp",
+    "sendgrid",
+    "universe"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "test"
+  ]
+}

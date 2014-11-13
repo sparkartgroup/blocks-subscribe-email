@@ -24,6 +24,10 @@
   "license": "MIT",
   "author": "Josiah Sprague <josiah.sprague@gmail.com>",
   "main": "src/subscribe-email.js",
+  "files": [
+    "src",
+    "gulpfile.js"
+  ],
   "devDependencies": {
     "browserify": "^5.11.1",
     "browserstack-webdriver": "^2.41.1",
