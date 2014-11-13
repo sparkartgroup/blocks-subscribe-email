@@ -1,10 +1,19 @@
 {
-  "name": "blocks-subscribe",
+  "name": "blocks-subscribe-email",
   "version": "1.0.0",
   "description": "Subscribes an email address to a list. Supports a selection of email marketing services.",
   "keywords": [
     "email",
-    "subscription"
+    "subscription",
+    "blocks",
+    "browser",
+    "browserify",
+    "mailchimp",
+    "sendgrid",
+    "universe",
+    "ecosystem:browser",
+    "ecosystem:solidus",
+    "ecosystem:blocks"
   ],
   "repository": {
     "type": "git",
