@@ -1,7 +1,6 @@
 var gulp = require('gulp');
 var runSequence = require('run-sequence');
 var browserify = require('browserify');
-var hbsfy = require('hbsfy');
 var source = require('vinyl-source-stream');
 var derequire = require('gulp-derequire');
 var http = require('http');
@@ -35,7 +34,6 @@ gulp.task('build', function() {
   });
   var bundle = function() {
     return bundler
-      .transform(hbsfy)
       .bundle()
       .pipe(source('subscribe-email.js'))
       .pipe(derequire())
@@ -50,7 +48,6 @@ gulp.task('build-tests', function() {
   });
   var bundle = function() {
     return bundler
-      .transform({global: true}, hbsfy)
       .bundle()
       .pipe(source('tests.js'))
       .pipe(derequire())

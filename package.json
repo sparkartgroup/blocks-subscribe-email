@@ -40,5 +40,10 @@
     "blocks-alerter": "^1.0.2",
     "form-serialize": "^0.3.0",
     "inherits": "^2.0.1"
+  },
+  "browserify": {
+    "transform": [
+      "hbsfy"
+    ]
   }
 }
