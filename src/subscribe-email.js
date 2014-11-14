@@ -23,9 +23,9 @@ function SubscribeEmail (options) {
   //Select new DOM element after replacing original with rendered template
   instance.theForm = document.getElementById(options.id);
 
-  var messageHolder = new Alerter({
-    prependTo: options.prependMessagesTo
-  });
+  if (options.alerter) {
+    var messageHolder = new Alerter(options.alerter);
+  }
 
   //Override Default Submit Action with CORS request
   instance.theForm.addEventListener('submit', function(e) {
@@ -43,12 +43,14 @@ function SubscribeEmail (options) {
   });
 
   //Listen for Message Events
-  this.on('subscriptionMessage', function (message) {
-    messageHolder.create({
-      message: message,
-      dismissable: true
+  if (messageHolder) {
+    this.on('subscriptionMessage', function (message) {
+      messageHolder.create({
+        message: message,
+        dismissable: true
+      });
     });
-  });
+  }
 }
 
 SubscribeEmail.prototype.makeJSONPRequest = function(url, data, instance) {
@@ -91,7 +93,13 @@ SubscribeEmail.prototype.processJSONP = function(json, instance) {
 function _setDefaults(options, instance) {
   options.namespace = options.namespace || 'subscribe-email';
   options.submitText = options.submitText || 'Subscribe';
-  options.prependMessagesTo = options.prependMessagesTo || options.element;
+  if (!options.hasOwnProperty('alerter')) {
+    options.alerter = {};
+  }
+  if (options.alerter) {
+    //options.prependMessagesTo is to maintain backward compatibility
+    options.alerter.prependTo = options.alerter.prependTo || options.prependMessagesTo || options.element;
+  }
   //get/set the ID of the HTML element (may be different than the value of element)
   options.id = instance.theForm.id || ('subscribe-email-' + options.service);
 

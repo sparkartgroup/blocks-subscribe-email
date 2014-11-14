@@ -5,6 +5,9 @@
   <title>Mocha Tests</title>
   <link rel="stylesheet" href="mocha.css" />
   <script src="mocha.js"></script>
+  <script src="../sinon.js"></script>
+  <script src="../sinon-ie.js"></script>
+  <script src="../mockapi.js"></script>
   <script>mocha.setup({ui:'bdd'});</script>
 </head>
 <body>
@@ -33,6 +36,12 @@
     runner.on('fail', function(test, err) {
       mocha_failures.push([test.fullTitle(), err.message]);
     });
+  </script>
+
+  <script>
+    window.onload = function(){
+      setupFakeServer();
+    };
   </script>
 </body>
 </html>
