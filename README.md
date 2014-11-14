@@ -38,8 +38,20 @@ The module can be configured with several optional parameters passed to it's con
 ### `element`
 **(Required)** A DOM element, jQuery element, or selector string to refer to the placeholder element.
 
-### `prependMessagesTo`
-By default, responses from the different mailing list platforms will be prepended to the SubscribeEmail `element` as a dismissable alert, but you can use this option to override which element the alerts are prepended to. Accepts a query string or a jQuery object.
+### `alerter`
+SubscribeEmail uses [`blocks-alerter`](https://github.com/blocks/alerter) to display response messages from the different mailing list platforms. By default, alerts will be prepended to `element` and use Alerter's default template. You can turn alerts off by setting `alerter: false`. If you would like to override the defaults, you can pass in an options hash with [options for Alerter](https://github.com/blocks/alerter#options). Example;
+
+```
+var mySubscribeForm = new SubscribeEmail({
+  element: '#subscribe-form',
+  service: 'universe',
+  key: 'your-api-key-here',
+  alerter: {
+    prependTo: 'body',
+    template: myCustomTemplate
+  }
+});
+```
 
 ### `service`
 **(Required)** The mailing list platform you are using. Available options are `mailchimp`, `sendgrid` and `universe`.

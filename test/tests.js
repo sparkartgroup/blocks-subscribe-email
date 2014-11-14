@@ -3,7 +3,7 @@ var $ = require('jquery');
 var SubscribeEmail = require('../build/subscribe-email.js');
 var Handlebars = require('handlebars');
 var testTemplate = require('./test-template.hbs');
-var sinon = require('sinon');
+var testTemplateAlert = require('./test-template-alert.hbs');
 
 describe('Subscribe Email Module', function() {
 
@@ -66,6 +66,78 @@ describe('Subscribe Email Module', function() {
       var testElement = $('#test-element.custom-template');
       assert(testElement.length > 0);
       done();
+    });
+
+  });
+
+  describe('alerter parameter', function() {
+
+    it('defaults to true', function(done){
+      var subscribeInstance = SubscribeEmail({
+        element: '#test-element',
+        service: 'universe'
+      });
+      setupFakeServer([subscribeInstance]);
+      $('#test-element .subscribe-email__input--email').val('test@test.com');
+      $('#test-element .subscribe-email__button').click();
+      window.setTimeout(function(){
+        var thisAlert = $('#test-element .alert');
+        assert(thisAlert.length > 0);
+        done();
+      }, 100);
+    });
+
+    it('turns off alerts when set to false', function(done){
+      var subscribeInstance = SubscribeEmail({
+        element: '#test-element',
+        service: 'universe',
+        alerter: false
+      });
+      setupFakeServer([subscribeInstance]);
+      $('#test-element .subscribe-email__input--email').val('test@test.com');
+      $('#test-element .subscribe-email__button').click();
+      window.setTimeout(function(){
+        var thisAlert = $('#test-element .alert');
+        assert(thisAlert.length == 0);
+        done();
+      }, 100);
+    });
+
+    it('allows setting alerter prependTo', function(done){
+      var subscribeInstance = SubscribeEmail({
+        element: '#test-element',
+        service: 'universe',
+        alerter: {
+          prependTo: 'body'
+        }
+      });
+      setupFakeServer([subscribeInstance]);
+      $('#test-element .subscribe-email__input--email').val('test@test.com');
+      $('#test-element .subscribe-email__button').click();
+      window.setTimeout(function(){
+        var thisAlert = $('body .alert');
+        assert(thisAlert.length > 0);
+        $('body .alert').remove();
+        done();
+      }, 100);
+    });
+
+    it('allows setting alerter template', function(done){
+      var subscribeInstance = SubscribeEmail({
+        element: '#test-element',
+        service: 'universe',
+        alerter: {
+          template: testTemplateAlert
+        }
+      });
+      setupFakeServer([subscribeInstance]);
+      $('#test-element .subscribe-email__input--email').val('test@test.com');
+      $('#test-element .subscribe-email__button').click();
+      window.setTimeout(function(){
+        var thisAlert = $('#test-element .alert-custom');
+        assert(thisAlert.length > 0);
+        done();
+      }, 100);
     });
 
   });

@@ -1,0 +1,17 @@
+<div id="{{id}}" class="alert-custom {{#type}}alert--{{.}}{{/type}} {{#pageWide}}alert--page{{/pageWide}}" role="alert">
+  {{#dismissable}}
+  <button type="button" class="alert__close-button" title="Close" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  {{/dismissable}}
+  {{#message}}<p class="alert__message">{{{.}}}</p>{{/message}}
+  {{#details}}<p class="alert__details">{{{.}}}</p>{{/details}}
+
+  {{#if errors}}
+  <ul class="alert__errors">
+    {{#each errors}}
+    <li class="alert__error">{{{.}}}</li>
+    {{/each}}
+  </ul>
+  {{/if}}
+</div>
