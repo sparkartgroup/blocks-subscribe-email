@@ -70,9 +70,11 @@ function setupFakeServer(subscribeEmailInstances) {
   });
 
   //Stub makeJSONPRequest method for each SubscribeEmail instance
-  subscribeEmailInstances.forEach(function(instance){
-    sinon.stub(instance, 'makeJSONPRequest', mockJSONPResponse);
-  });
+  if (subscribeEmailInstances) {
+    subscribeEmailInstances.forEach(function(instance){
+      sinon.stub(instance, 'makeJSONPRequest', mockJSONPResponse);
+    });
+  }
 }
 
 function mockJSONPResponse(url, data, instance) {

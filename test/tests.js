@@ -77,6 +77,7 @@ describe('Subscribe Email Module', function() {
         element: '#test-element',
         service: 'universe'
       });
+      setupFakeServer([subscribeInstance]);
       $('#test-element .subscribe-email__input--email').val('test@test.com');
       $('#test-element .subscribe-email__button').click();
       window.setTimeout(function(){
@@ -92,6 +93,7 @@ describe('Subscribe Email Module', function() {
         service: 'universe',
         alerter: false
       });
+      setupFakeServer([subscribeInstance]);
       $('#test-element .subscribe-email__input--email').val('test@test.com');
       $('#test-element .subscribe-email__button').click();
       window.setTimeout(function(){
@@ -109,6 +111,7 @@ describe('Subscribe Email Module', function() {
           prependTo: 'body'
         }
       });
+      setupFakeServer([subscribeInstance]);
       $('#test-element .subscribe-email__input--email').val('test@test.com');
       $('#test-element .subscribe-email__button').click();
       window.setTimeout(function(){
@@ -127,6 +130,7 @@ describe('Subscribe Email Module', function() {
           template: testTemplateAlert
         }
       });
+      setupFakeServer([subscribeInstance]);
       $('#test-element .subscribe-email__input--email').val('test@test.com');
       $('#test-element .subscribe-email__button').click();
       window.setTimeout(function(){
