@@ -23,9 +23,8 @@ function SubscribeEmail (options) {
   //Select new DOM element after replacing original with rendered template
   instance.theForm = document.getElementById(options.id);
 
-  if (options.alerter) {
-    var messageHolder = new Alerter(options.alerter);
-  }
+  var messageHolder;
+  if (options.alerter) messageHolder = new Alerter(options.alerter);
 
   //Override Default Submit Action with CORS request
   instance.theForm.addEventListener('submit', function(e) {
@@ -93,7 +92,7 @@ SubscribeEmail.prototype.processJSONP = function(json, instance) {
 function _setDefaults(options, instance) {
   options.namespace = options.namespace || 'subscribe-email';
   options.submitText = options.submitText || 'Subscribe';
-  if (!options.hasOwnProperty('alerter')) {
+  if (options.alerter === undefined || options.alerter === null) {
     options.alerter = {};
   }
   if (options.alerter) {
