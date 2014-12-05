@@ -90,6 +90,7 @@ SubscribeEmail.prototype.processJSONP = function(json, instance) {
 
 //Private Functions
 function _setDefaults(options, instance) {
+  var instanceId = 'subscribe-email-' + Math.floor(Math.random() * 10000);
   options.namespace = options.namespace || 'subscribe-email';
   options.submitText = options.submitText || 'Subscribe';
   if (options.alerter === undefined || options.alerter === null) {
@@ -97,10 +98,10 @@ function _setDefaults(options, instance) {
   }
   if (options.alerter) {
     //options.prependMessagesTo is to maintain backward compatibility
-    options.alerter.prependTo = options.alerter.prependTo || options.prependMessagesTo || options.element;
+    options.alerter.prependTo = options.alerter.prependTo || options.prependMessagesTo || '#' + instanceId;
   }
   //get/set the ID of the HTML element (may be different than the value of element)
-  options.id = instance.theForm.id || ('subscribe-email-' + options.service);
+  options.id = instance.theForm.id || (instanceId);
 
   if (typeof options.template === 'function') {
     instance.template = options.template;
