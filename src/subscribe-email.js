@@ -100,8 +100,8 @@ function _setDefaults(options, instance) {
     //options.prependMessagesTo is to maintain backward compatibility
     options.alerter.prependTo = options.alerter.prependTo || options.prependMessagesTo || '#' + instanceId;
   }
-  //get/set the ID of the HTML element (may be different than the value of element)
-  options.id = instance.theForm.id || (instanceId);
+  //set the ID of the HTML element (will be different than the value of element)
+  options.id = instanceId;
 
   if (typeof options.template === 'function') {
     instance.template = options.template;
