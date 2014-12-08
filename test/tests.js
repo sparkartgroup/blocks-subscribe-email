@@ -42,6 +42,18 @@ describe('Subscribe Email Module', function() {
       done();
     });
 
+    it('accepts a DOM Node as the element to render the template into', function(done){
+      var testElement = document.querySelector('#test-element');
+      var subscribeInstance = SubscribeEmail({
+        element: testElement,
+        service: 'universe'
+      });
+      var emailInputs = $('#test-element input[type=email]');
+      assert(emailInputs.length > 0);
+      done();
+    });
+
+
     it('accepts a jQuery object as the element to render the template into', function(done){
       var jQueryForm = $('#test-element');
       var subscribeInstance = SubscribeEmail({

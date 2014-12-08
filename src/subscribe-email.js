@@ -13,6 +13,8 @@ function SubscribeEmail (options) {
 
   if (options.element.jquery) {
     instance.theForm = options.element[0];
+  } else if (options.element.nodeType > 0) {
+    instance.theForm = options.element;
   } else {
     instance.theForm = document.querySelector(options.element);
   }
