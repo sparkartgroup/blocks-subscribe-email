@@ -71,6 +71,9 @@ If you want to customize the markup, you can override the default markup by pass
 ### `namespace`
 Out of the box, the module will generate BEM markup with the namespace `subscribe-email`, but you can use this option to override the default without passing in a custom template.
 
+### `optInSource`
+This is a string that can be set on a Universe instance of subscribe-email. With the default template, this will be passed to Universe in a hidden input called `contact[lists_opt_in_source]`. You can duplicate this behavior in a custom template. https://github.com/SparkartGroupInc/sparkart-services/blob/master/doc/api/contacts.md
+
 ## Events
 You can easily integrate the messages into other parts of your page by listening for events being emitted from the SubscribeEmail instance;
 
