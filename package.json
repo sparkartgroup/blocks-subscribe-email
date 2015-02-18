@@ -1,6 +1,6 @@
 {
   "name": "blocks-subscribe-email",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Subscribes an email address to a list. Supports a selection of email marketing services.",
   "keywords": [
     "email",
