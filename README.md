@@ -5,8 +5,8 @@ It allows developers to quickly include an email collection form on a page witho
 # Getting the Module
 You can get the module in any one of the following ways;
 - Download [the latest release](https://github.com/blocks/subscribe-email/releases) from GitHub
-- Or install with npm; `npm install subscribe-email`
-- Or install with Bower; `bower install subscribe-email`
+- Or install with npm; `npm install blocks-subscribe-email`
+- Or install with Bower; `bower install blocks-subscribe-email`
 
 # Example Usage
 To get started, you'll need to include the script on your page, create a placeholder element, and initialize the module. After you include subscribe-email.js in your project, here's some minimal code you can use to get started quickly;
