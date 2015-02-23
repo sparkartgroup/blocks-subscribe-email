@@ -1,4 +1,7 @@
 <form id="{{id}}" data-subscribe-instance="{{instanceId}}" class="{{namespace}}">
+{{#each hiddenFields}}
+<input class="{{../namespace}}__input {{../namespace}}__input--hidden" type="hidden" name="{{name}}" value="{{value}}">
+{{/each}}
 <label class="{{namespace}}__label" for="{{emailName}}">Email Address</label>
 <input class="{{namespace}}__input {{namespace}}__input--email" type="email" name="{{emailName}}" required>
 <button class="{{namespace}}__button" type="submit">{{submitText}}</button>

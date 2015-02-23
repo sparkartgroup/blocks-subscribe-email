@@ -16,7 +16,13 @@
       var universeForm = new SubscribeEmail({
         element: '#universe-form',
         service: 'universe',
-        key: 'test-key'
+        key: 'test-key',
+        hiddenFields: [
+          {
+            name: 'contact[lists_opt_in_source]',
+            value: 'subscribe-email demo page'
+          }
+        ]
       });
     </script>
 

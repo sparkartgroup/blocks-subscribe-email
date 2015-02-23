@@ -154,4 +154,28 @@ describe('Subscribe Email Module', function() {
 
   });
 
+  describe('hiddenFields', function() {
+    it('name and value added to hidden input element', function(done){
+      var subscribeInstance = SubscribeEmail({
+        element: '#test-element',
+        service: 'universe',
+        hiddenFields: [
+          {
+            name: 'testField1',
+            value: 'testValue1'
+          }, 
+          {
+            name: 'testField2',
+            value: 'testValue2'
+          }
+        ]
+      });
+      var testField1 = $('#test-element .subscribe-email__input--hidden[name="testField1"]').val('testValue1');
+      assert(testField1.length > 0);
+      var testField2 = $('#test-element .subscribe-email__input--hidden[name="testField2"]').val('testValue2');
+      assert(testField2.length > 0);
+      done();
+    });
+  });
+
 });
