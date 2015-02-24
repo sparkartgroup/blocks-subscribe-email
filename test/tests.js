@@ -170,10 +170,10 @@ describe('Subscribe Email Module', function() {
           }
         ]
       });
-      var testField1 = $('#test-element .subscribe-email__input--hidden[name="testField1"]').val('testValue1');
-      assert(testField1.length > 0);
-      var testField2 = $('#test-element .subscribe-email__input--hidden[name="testField2"]').val('testValue2');
-      assert(testField2.length > 0);
+      var testField1 = $('#test-element .subscribe-email__input--hidden[name="testField1"]');
+      assert(testField1.val() === 'testValue1');
+      var testField2 = $('#test-element .subscribe-email__input--hidden[name="testField2"]');
+      assert(testField2.val() === 'testValue2');
       done();
     });
   });
