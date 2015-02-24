@@ -170,9 +170,9 @@ describe('Subscribe Email Module', function() {
           }
         ]
       });
-      var testField1 = $('#test-element .subscribe-email__input--hidden[name="testField1"]');
+      var testField1 = $('#test-element input[name="testField1"][type="hidden"]');
       assert(testField1.val() === 'testValue1');
-      var testField2 = $('#test-element .subscribe-email__input--hidden[name="testField2"]');
+      var testField2 = $('#test-element input[name="testField2"][type="hidden"]');
       assert(testField2.val() === 'testValue2');
       done();
     });
