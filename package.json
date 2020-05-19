@@ -50,9 +50,10 @@
   "dependencies": {
     "blocks-alerter": "^1.0.2",
     "form-serialize": "^0.3.0",
-    "handlebars": "1.3.x",
-    "hbsfy": "^2.1.0",
     "inherits": "^2.0.1"
+  },
+  "peerDependencies": {
+    "handlebars": "*"
   },
   "browserify": {
     "transform": [
